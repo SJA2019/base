@@ -14,7 +14,10 @@ cat $1
 echo "****\n"
 
 echo "BackingUp:****"
-sudo dd bs=4M if=/dev/sdb | gzip > $1/raspbian.img.gz
+rm  $1/raspbian.img.gz
+sudo dd bs=4M if=/dev/mmcblk0 status=progress | gzip --verbose > $1/raspbian.img.gz
+
+#sudo dd bs=4M if=/dev/mmcblk0 of="$1/raspbian.img" status=progress
 echo "DoneBackingUp:****"
 
 
