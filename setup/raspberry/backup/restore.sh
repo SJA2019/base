@@ -5,7 +5,7 @@
 echo "$0 ++"
 
 RASP_BACKUP_PATH=$1 
-RASP_BACKUP_STATUS_FILE="restore.sucess"
+RASP_BACKUP_STATUS_FILE="backup.sucess"
 RASP_RESTORE_PATH=$2
 
 if [ $# -lt 2 ]

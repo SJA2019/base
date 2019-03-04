@@ -7,7 +7,7 @@ echo "$0 ++"
 RASP_BACKUP_PATH=$1 
 BACKUP_DIR_1=backup1
 BACKUP_DIR_2=backup2
-RASP_BACKUP_STATUS_FILE="restore.sucess"
+RASP_BACKUP_STATUS_FILE="backup.sucess"
 
 
 if [ $# -lt 1 ]
@@ -31,8 +31,7 @@ fi
 rm $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE
 if [ $? -ne 0 ]
 then
-echo "error: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
-exit 1
+echo "alert: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
 fi
 
 rsync -aHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_1/
@@ -45,8 +44,7 @@ fi
 touch $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE
 if [ $? -ne 0 ]
 then
-echo "error: unable to create $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
-exit 1
+echo "alert: unable to create $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
 fi
 
 
@@ -61,8 +59,7 @@ fi
 rm $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE
 if [ $? -ne 0 ]
 then
-echo "error: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
-exit 1
+echo "alert: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
 fi
 
 rsync -aHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_2/
@@ -75,8 +72,7 @@ fi
 touch $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE
 if [ $? -ne 0 ]
 then
-echo "error: unable to create $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
-exit 1
+echo "alert: unable to create $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
 fi
 
 echo "$0 --"
