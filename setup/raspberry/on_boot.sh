@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source raspi_params.sh
+. raspi_params.sh
 echo "echo $0 ++"
 
 sleep 5
