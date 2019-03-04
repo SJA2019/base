@@ -28,22 +28,22 @@ then
 echo "alert: $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE is not present: looks like a first time backup."
 fi
 
-RESULT1=`rm $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE`
-if [ $RESULT1 -ne 0 ]
+rm $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE
+if [ $? -ne 0 ]
 then
 echo "error: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
 exit 1
 fi
 
-RESULT1=`rsync -aHv --delete --exclude-from=/rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_1/`
-if [ $RESULT1 -ne 0 ]
+rsync -aHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_1/
+if [ $? -ne 0 ]
 then
 echo "error: rsync failed to backup to $BACKUP_DIR_1."
 exit 1
 fi
 
-RESULT1=`touch $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE`
-if [ $RESULT1 -ne 0 ]
+touch $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE
+if [ $? -ne 0 ]
 then
 echo "error: unable to create $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
 exit 1
@@ -58,22 +58,22 @@ then
 echo "alert: $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE is not present: looks like a first time backup."
 fi 
 
-RESULT2=`rm $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE`
-if [ $RESULT2 -ne 0 ]
+rm $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE
+if [ $? -ne 0 ]
 then
 echo "error: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
 exit 1
 fi
 
-RESULT2=`rsync -aHv --delete --exclude-from=/rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_2/`
-if [ $RESULT2 -ne 0 ]
+rsync -aHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_2/
+if [ $? -ne 0 ]
 then
 echo "error: rsync failed to backup to $BACKUP_DIR_2."
 exit 1
 fi
 
-RESULT2=`touch $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE`
-if [ $RESULT2 -ne 0 ]
+touch $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE
+if [ $? -ne 0 ]
 then
 echo "error: unable to create $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
 exit 1
