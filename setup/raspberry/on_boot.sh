@@ -3,6 +3,7 @@
 . ./raspi_params.sh
 echo "echo $0 ++"
 
+
 sleep 5
 #update script dir.
 sudo echo "cd ~/source"
