@@ -5,6 +5,7 @@ sudo apt update
 sudo apt upgrade
 
 #installs
+
 echo "installing transmission...."
 sudo apt-get install transmission
 
@@ -16,14 +17,14 @@ sudo apt-get install vlc
 
 echo "installing and configuring git.."
 sudo apt-get install git
-pushd ~
+cd ~
 mkdir source
 sudo git clone https://github.com/SJA2019/base.git ./source/
-popd
+cd -
 
 #kodi
 echo "please install latest kodi from site."
-echo "perform steps: https://www.makeuseof.com/tag/install-kodi-raspbian-media-center"
+sudo apt-get install kodi
 
 echo "waiting for 10s."
 sleep 10

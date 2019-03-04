@@ -5,9 +5,9 @@
 sudo echo "" >> ~/.bashrc
 sudo echo "performing custom config on boot...">>~/.bashrc
 
-sudo "pushd `pwd`" >> ~/.bashrc
+sudo "cd `pwd`" >> ~/.bashrc
 sudo echo "sh on_boot.sh > ~/ob_boot_log.txt" >> ~/.bashrc
-sudo "popd" >> ~/.bashrc
+sudo "cd -" >> ~/.bashrc
 
 # manual installs.
 #
