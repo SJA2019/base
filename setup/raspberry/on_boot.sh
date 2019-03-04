@@ -13,7 +13,7 @@ sleep 1m
 #perform backup.
 echo "starting backup script."
 cd backup
-if [ ! -d $CONFIG_VAR_RASPI_BACKUP_PATH ] 
+if [ -d $CONFIG_VAR_RASPI_BACKUP_PATH ] 
 then
 ./backup.sh $CONFIG_VAR_RASPI_BACKUP_PATH/$CONFIG_VAR_RASPI_BACKUP_DIR_NAME
 fi
