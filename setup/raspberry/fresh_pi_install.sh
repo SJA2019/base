@@ -26,5 +26,7 @@ cd -
 echo "please install latest kodi from site."
 sudo apt-get install kodi
 
+sudo apt-get install vim
+
 echo "waiting for 10s."
 sleep 10
