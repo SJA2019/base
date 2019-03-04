@@ -2,12 +2,13 @@
 
 ## get inside the scripts dir and execute on-boot script.
 #
-sudo echo "" >> ~/.bashrc
-sudo echo "performing custom config on boot...">>~/.bashrc
-
+sudo echo ""
+sudo echo "#performing custom config on boot.."
 sudo echo "cd `pwd`" >> ~/.bashrc
-sudo echo "sh on_boot.sh > ~/ob_boot_log.txt" >> ~/.bashrc
+sudo echo "sh on_boot.sh >> ~/ob_boot_log.txt" >> ~/.bashrc
 sudo echo "cd -" >> ~/.bashrc
+
+
 
 # manual installs.
 #
