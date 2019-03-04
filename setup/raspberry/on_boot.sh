@@ -1,5 +1,7 @@
 #!/bin/sh
 
+
+set -x
 . ./raspi_params.sh
 echo "echo $0 ++"
 
