@@ -34,7 +34,7 @@ then
 echo "alert: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_1/$RASP_BACKUP_STATUS_FILE"
 fi
 
-rsync -rlptDHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_1/
+rsync -aHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_1/
 if [ $? -ne 0 ]
 then
 echo "error: rsync failed to backup to $BACKUP_DIR_1."
@@ -62,7 +62,7 @@ then
 echo "alert: unable to remove $RASP_BACKUP_PATH/$BACKUP_DIR_2/$RASP_BACKUP_STATUS_FILE"
 fi
 
-rsync -rlptDHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_2/
+rsync -aHv --delete --exclude-from=./rsyncExclude.txt / $RASP_BACKUP_PATH/$BACKUP_DIR_2/
 if [ $? -ne 0 ]
 then
 echo "error: rsync failed to backup to $BACKUP_DIR_2."
