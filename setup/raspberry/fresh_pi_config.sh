@@ -4,11 +4,10 @@
 #
 sudo echo ""
 sudo echo "#performing custom config on boot.."
-#sudo echo "cd `pwd`" >> ~/.bashrc
-#sudo echo "rm ~/Desktop/ob_boot_log.txt >> ~/Desktop/ob_boot_log.txt" >> ~/.bashrc
-#sudo echo "sh on_boot.sh >> ~/Desktop/ob_boot_log.txt" >> ~/.bashrc
-#sudo echo "cd -" >> ~/.bashrc
-chmod ugo+x  
+sudo cp -f ./on_boot.sh /etc/init.d/
+sudo cp -f ./raspi_params.sh /etc/init.d/
+sudo chmod ugo+rwx  /etc/init.d/on_boot.sh
+sudo chmod ugo+rwx  /etc/init.d/raspi_params.sh
 
 
 
