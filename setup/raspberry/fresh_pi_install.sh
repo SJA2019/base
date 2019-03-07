@@ -28,5 +28,7 @@ sudo apt-get install kodi
 
 sudo apt-get install vim
 
+sudo apt-get install samba samba-common-bin
+
 echo "waiting for 10s."
 sleep 10
