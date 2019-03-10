@@ -4,26 +4,45 @@
 
 . ./raspi_params.sh
 
+
+sudo chmod ugo+rwx $CONFIG_VAR_RASPI_PATH_250
+sudo chmod ugo+rwx $CONFIG_VAR_RASPI_PATH_150
+sudo chmod ugo+rwx $CONFIG_VAR_RASPI_PATH_100
+
+## setup nfs server
+#
+if [ ! -f /etc/exports ]
+then
+	touch /etc/exports
+fi
+echo "$CONFIG_VAR_RASPI_PATH_250 *(rw,sync)" >> /etc/exports
+echo "$CONFIG_VAR_RASPI_PATH_150 *(rw,sync)" >> /etc/exports
+echo "$CONFIG_VAR_RASPI_PATH_100 *(rw,sync)" >> /etc/exports
+sudo exportfs
+sudo update-rc.d rpcbind enable
+sudo service rpcbind restart
+sudo exportfs
+
+
 ## setup smb server.
 #
-sudo chmod ugo+rwx $CONFIG_VAR_RASPI_PATH_250
 
-if [ ! -f /etc/init.d/smb.conf ]
-then
-	touch /etc/init.d/smb.conf
-fi
-echo "[250gb]" > /etc/init.d/smb.conf
-echo "comment = Pi shared folder" >> /etc/init.d/smb.conf
-echo "path = $CONFIG_VAR_RASPI_PATH_250/Media" >> /etc/init.d/smb.conf
-echo "browseable = yes" >> /etc/init.d/smb.conf
-echo "writeable = Yes" >> /etc/init.d/smb.conf
-echo "only guest = no" >> /etc/init.d/smb.conf
-echo "create mask = 0777" >> /etc/init.d/smb.conf
-echo "directory mask = 0777" >> /etc/init.d/smb.conf
-echo "public = yes" >> /etc/init.d/smb.conf
-echo "guest ok = yes" >> /etc/init.d/smb.conf
-echo "force user = pi" >> /etc/init.d/smb.conf
-echo "valid users = pi">> /etc/init.d/smb.conf
+#if [ ! -f /etc/init.d/smb.conf ]
+#then
+#	touch /etc/init.d/smb.conf
+#fi
+#echo "[250gb]" > /etc/init.d/smb.conf
+#echo "comment = Pi shared folder" >> /etc/init.d/smb.conf
+#echo "path = $CONFIG_VAR_RASPI_PATH_250/Media" >> /etc/init.d/smb.conf
+#echo "browseable = yes" >> /etc/init.d/smb.conf
+#echo "writeable = Yes" >> /etc/init.d/smb.conf
+#echo "only guest = no" >> /etc/init.d/smb.conf
+#echo "create mask = 0777" >> /etc/init.d/smb.conf
+#echo "directory mask = 0777" >> /etc/init.d/smb.conf
+#echo "public = yes" >> /etc/init.d/smb.conf
+#echo "guest ok = yes" >> /etc/init.d/smb.conf
+#echo "force user = pi" >> /etc/init.d/smb.conf
+#echo "valid users = pi">> /etc/init.d/smb.conf
 
 #echo -e "raspberry\nraspberry" | sudo smbpasswd -s -a pi
 sudo /etc/init.d/samba restart
