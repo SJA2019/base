@@ -1,5 +1,14 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          on_boot.sh
+# Required-Start:    $local_fs $network $named $time $syslog
+# Required-Stop:     $local_fs $network $named $time $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       on_boot_script
+### END INIT INFO
 
+#changeToTargetDir
 {
 	set -x
 	. ./raspi_params.sh
@@ -18,7 +27,7 @@
 
 
 	sleep 1m
-	#perform backup.
+	perform backup.
 	echo "starting backup script."
 	cd backup
 	if [ -d $CONFIG_VAR_RASPI_BACKUP_PATH ] 
@@ -31,7 +40,10 @@
 
 	sleep 2m
 	#start music.
-	vlc $CONFIG_VAR_RASPI_MUSIC_DIR
-
+	echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
+	#kodi
 	echo "echo $0 --"
-} > /tmp/on_boot_output.txt 2> /tmp/on_boot_output_errors.txt
+#changeToOrigDir
+#exit 0
+} > /root/on_boot_output.txt 2> /root/on_boot_output_errors.txt
+exit 0
