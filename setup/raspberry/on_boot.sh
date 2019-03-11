@@ -43,6 +43,11 @@
 	echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
 	#kodi
 	echo "echo $0 --"
+
+	sleep 30m
+	#kill vlc
+	killall -9 vlc
+
 #changeToOrigDir
 #exit 0
 } > /root/on_boot_output.txt 2> /root/on_boot_output_errors.txt
