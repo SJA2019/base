@@ -8,8 +8,10 @@
 # Description:       on_boot_script
 ### END INIT INFO
 
-#changeToTargetDir
 {
+
+#changeToTargetDir
+
 	set -x
 	. ./raspi_params.sh
 	echo "echo $0 ++"
@@ -38,15 +40,17 @@
 	echo "done backup script."
 
 
-	sleep 2m
+	#sleep 2m
 	#start music.
-	echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
-	#kodi
-	echo "echo $0 --"
+	#echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
 
-	sleep 30m
+	#sleep 30m
 	#kill vlc
-	killall -9 vlc
+	#killall -9 vlc
+
+
+
+	echo "echo $0 --"
 
 #changeToOrigDir
 #exit 0
