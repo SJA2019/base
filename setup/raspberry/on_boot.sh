@@ -54,5 +54,5 @@
 
 #changeToOrigDir
 #exit 0
-} > ~/tmp/on_boot_output.txt 2> ~/tmp/on_boot_output_errors.txt
+} > /tmp/on_boot_output.txt 2> /tmp/on_boot_output_errors.txt
 exit 0
