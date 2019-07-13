@@ -49,10 +49,10 @@
 	#killall -9 vlc
 
 
-
-	echo "echo $0 --"
+	
+	echo "echo $0 -- date=`date`, user=`whoami`"
 
 #changeToOrigDir
 #exit 0
-} > /root/on_boot_output.txt 2> /root/on_boot_output_errors.txt
+} > ~/tmp/on_boot_output.txt 2> ~/tmp/on_boot_output_errors.txt
 exit 0
