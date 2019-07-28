@@ -8,8 +8,10 @@
 # Description:       on_boot_script
 ### END INIT INFO
 
-#changeToTargetDir
 {
+
+#changeToTargetDir
+
 	set -x
 	#. ./raspi_params.sh
 	echo "echo $0 ++"
@@ -42,10 +44,14 @@
 	#sleep 2m
 	#start music.
 	#echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
-	#kodi
-	#echo "echo $0 --"
+
+	#sleep 30m
+	#kill vlc
+	#killall -9 vlc
+
+	echo "echo $0 -- date=`date`, user=`whoami`"
 
 #changeToOrigDir
 #exit 0
-} > /root/on_boot_output.txt 2> /root/on_boot_output_errors.txt
+} > /tmp/on_boot_output.txt 2> /tmp/on_boot_output_errors.txt
 exit 0
