@@ -1,6 +1,9 @@
 #!/bin/sh
 ## get inside the scripts dir and execute on-boot script.
 #
+
+echo "echo $0 ++"
+
 CURR_DIR=`pwd`
 sudo echo ""
 sudo echo "#performing custom config on boot.."
@@ -15,3 +18,5 @@ sudo chmod ugo+rwx -R ./
 #sudo chmod ugo+rwx  /etc/init.d/on_boot.sh
 #sudo chmod ugo+rwx  /etc/init.d/raspi_params.sh
 #sudo chmod ugo+rwx -R  /etc/init.d/backup
+
+echo "echo $0 --"

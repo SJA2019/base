@@ -11,38 +11,40 @@
 #changeToTargetDir
 {
 	set -x
-	. ./raspi_params.sh
+	#. ./raspi_params.sh
 	echo "echo $0 ++"
 
-
-
 	sleep 5
+
+	#set the ip address.
+	#
+	sudo ifconfig eth0 192.168.2.100 netmask 255.255.255.0
+
 	#update script dir.
+	#
 	sudo echo "cd ~/source"
 	sudo echo "git pull"
 	sudo echo "cd -"
 
 
-	sudo ifconfig eth0 192.168.2.100 netmask 255.255.255.0
+	#sleep 1m
+	#perform backup.
+	#echo "starting backup script."
+	#cd backup
+	#if [ -d $CONFIG_VAR_RASPI_BACKUP_PATH ] 
+	#then
+	#sudo bash backup.sh $CONFIG_VAR_RASPI_BACKUP_PATH/$CONFIG_VAR_RASPI_BACKUP_DIR_NAME
+	#fi
+	#cd -
+	#echo "done backup script."
 
 
-	sleep 1m
-	perform backup.
-	echo "starting backup script."
-	cd backup
-	if [ -d $CONFIG_VAR_RASPI_BACKUP_PATH ] 
-	then
-	sudo bash backup.sh $CONFIG_VAR_RASPI_BACKUP_PATH/$CONFIG_VAR_RASPI_BACKUP_DIR_NAME
-	fi
-	cd -
-	echo "done backup script."
-
-
-	sleep 2m
+	#sleep 2m
 	#start music.
-	echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
+	#echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
 	#kodi
-	echo "echo $0 --"
+	#echo "echo $0 --"
+
 #changeToOrigDir
 #exit 0
 } > /root/on_boot_output.txt 2> /root/on_boot_output_errors.txt
