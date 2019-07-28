@@ -3,14 +3,18 @@
 #configs.
 echo "echo $0 ++"
 
-# manual installs.
+# copy config.txt to /boot/
 #
-echo "set correct display resolution: 720x480 16:9 60hz seems to work."
-echo "enable sftp,ssh,vnc"
-echo "enable video-camera-codecs-option, 256mb-memory-split-option, expanded-file-system in raspi-config,"
-echo "launching raspiconfig in 30s..."
-sleep 30
-sudo raspi-config 
+cp ./config.txt /boot/config.txt
+
+# edit config.txt in /boot/config.txt.
+#
+#echo "set correct display resolution: 720x480 16:9 60hz seems to work."
+#echo "enable sftp,ssh,vnc"
+#echo "enable video-camera-codecs-option, 256mb-memory-split-option, expanded-file-system in raspi-config,"
+#echo "launching raspiconfig in 30s..."
+#sleep 30
+#sudo raspi-config 
 
 
 #. ./raspi_params.sh
