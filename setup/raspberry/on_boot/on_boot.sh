@@ -12,7 +12,10 @@
 
 #changeToTargetDir
 
+	#verbose mode : https://stackoverflow.com/questions/36273665/what-does-set-x-do
 	set -x
+
+	rm /tmp/on_boot_output*txt
 	echo "echo $0 ++"
 
 	sleep 5
@@ -27,10 +30,12 @@
 	sudo echo "git pull"
 	sudo echo "cd -"
 
-	echo "echo $0 -- date=`date`, user=`whoami`"
 	zenity "[`date`] Greetings `whoami`. Have a nice session!!"
+	echo "echo $0 -- date=`date`, user=`whoami`"
 
 #changeToOrigDir
 #exit 0
 } > /tmp/on_boot_output.txt 2> /tmp/on_boot_output_errors.txt
+echo "||| LastUpdated: `date +'%y%m%d%H%M'`" >> /tmp/on_boot_output.txt
+echo "||| LastUpdated: `date +'%y%m%d%H%M'`" >> /tmp/on_boot_output_errors.txt
 exit 0
