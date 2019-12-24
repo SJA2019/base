@@ -13,7 +13,6 @@
 #changeToTargetDir
 
 	set -x
-	#. ./raspi_params.sh
 	echo "echo $0 ++"
 
 	sleep 5
@@ -28,28 +27,8 @@
 	sudo echo "git pull"
 	sudo echo "cd -"
 
-
-	#sleep 1m
-	#perform backup.
-	#echo "starting backup script."
-	#cd backup
-	#if [ -d $CONFIG_VAR_RASPI_BACKUP_PATH ] 
-	#then
-	#sudo bash backup.sh $CONFIG_VAR_RASPI_BACKUP_PATH/$CONFIG_VAR_RASPI_BACKUP_DIR_NAME
-	#fi
-	#cd -
-	#echo "done backup script."
-
-
-	#sleep 2m
-	#start music.
-	#echo raspberry | sudo -S -u pi /usr/bin/cvlc $CONFIG_VAR_RASPI_MUSIC_DIR
-
-	#sleep 30m
-	#kill vlc
-	#killall -9 vlc
-
 	echo "echo $0 -- date=`date`, user=`whoami`"
+	zenity "[`date`] Greetings `whoami`. Have a nice session!!"
 
 #changeToOrigDir
 #exit 0

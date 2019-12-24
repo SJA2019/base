@@ -13,10 +13,4 @@ sudo sed -i "s|#changeToTargetDir|cd $CURR_DIR|g" /etc/init.d/on_boot.sh
 sudo sed -i "s/#changeToOrigDir/cd -/g" /etc/init.d/on_boot.sh
 sudo chmod ugo+rwx -R ./
 
-#sudo cp -f ./raspi_params.sh /etc/init.d/
-#sudo cp -rf ./backup /etc/init.d/ 
-#sudo chmod ugo+rwx  /etc/init.d/on_boot.sh
-#sudo chmod ugo+rwx  /etc/init.d/raspi_params.sh
-#sudo chmod ugo+rwx -R  /etc/init.d/backup
-
 echo "echo $0 --"

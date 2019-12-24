@@ -24,16 +24,8 @@ mkdir source
 sudo git clone https://github.com/SJA2019/base.git ./source/
 cd -
 
-#echo "installing vim".
 sudo apt-get install vim
 
-
-#kodi
-#echo "please install latest kodi from site."
-#sudo apt-get install kodi
-
-#sudo apt-get install samba samba-common-bin
-#sudo apt-get install nfs-common nfs-server -y
 
 echo "waiting for 10s."
 
