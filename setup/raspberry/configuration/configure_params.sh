@@ -7,4 +7,12 @@ echo "echo $0 ++"
 #
 cp ./config.txt /boot/config.txt
 
+# enable ssh
+#
+touch /boot/ssh
+
+# start vnc server
+#
+sudo systemctl enable vncserver-x11-serviced.service
+
 echo "echo $0 --"
