@@ -1,0 +1,5 @@
+class WarDrive {
+
+	WarDrive();
+	~WarDrive();
+};
