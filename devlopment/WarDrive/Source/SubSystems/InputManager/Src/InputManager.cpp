@@ -1,5 +1,5 @@
 #include <iostream>
-#include "inputManager.h"
+#include "InputManager.h"
 
 InputManager::InputManager() {
 	std::cout<<"InputManager() ++ --";
