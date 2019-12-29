@@ -8,7 +8,9 @@ project(WarDrive)
 set(CMAKE_BUILD_TYPE Release)
 
 #Specify the include folder.
-include_directories(Src Api)
+include_directories(Src)
+include_directories(Api)
+include_directories(../InputManager/Api)
 
 #create a SOURCES parameter, the file(GLOB...) allows for wildcard additions:
 file(GLOB SOURCES "Src/*.cpp")
