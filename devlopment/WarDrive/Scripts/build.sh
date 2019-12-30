@@ -2,20 +2,18 @@
 
 echo "$0:begining.."
 
+rm -rf ../Source/TestApp/Build
+mkdir ../Source/TestApp/Build
+
 cd ../Source/TestApp/Build
 
 echo "starting TestApp build.."
-
-echo "make clean.."
-make clean
-
-echo "delete Build dir content.."
-rm -rf ./*
 
 echo "running-cmake.."
 cmake ..
 
 echo "running-make.."
+make clean
 make
 
 cd -
