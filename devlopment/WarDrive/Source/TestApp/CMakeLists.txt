@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 2.8.9)
 project(TestApp)
 
 #build dependancies first.
+add_subdirectory(../Thirdparty/SDL ./SDL)
 add_subdirectory(../SubSystems/InputManager ./InputManager )
 add_subdirectory(../SubSystems/Core ./Core )
 

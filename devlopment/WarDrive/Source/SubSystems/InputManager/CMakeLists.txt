@@ -8,7 +8,11 @@ project(InputManager)
 set(CMAKE_BUILD_TYPE Release)
 
 #Specify the include folder.
-include_directories(Src Api)
+include_directories(
+Src
+Api
+../../Thirdparty/SDL/include
+)
 
 #create a SOURCES parameter, the file(GLOB...) allows for wildcard additions:
 file(GLOB SOURCES "Src/*.cpp")
