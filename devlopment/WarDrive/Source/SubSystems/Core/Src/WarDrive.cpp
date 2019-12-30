@@ -10,7 +10,7 @@ WarDrive::WarDrive() {
 
 WarDrive::~WarDrive() {
 	std::cout<<"~WarDrive() ++";
-	m_sptrInputManager = NULL;
+	m_sptrInputManager = nullptr;
 	std::cout<<"~WarDrive() --";
 }
 
