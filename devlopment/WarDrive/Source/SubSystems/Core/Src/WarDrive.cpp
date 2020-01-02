@@ -12,5 +12,8 @@ WarDrive::~WarDrive() {
 	std::cout<<"~WarDrive() ++"<<std::endl;
 	m_sptrInputManager = nullptr;
 	std::cout<<"~WarDrive() --"<<std::endl;
-}
+} 
 
+void WarDrive::HandleInput() {
+	m_sptrInputManager->PollJoyEvents();
+}

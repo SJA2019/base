@@ -22,3 +22,41 @@ InputManager::~InputManager() {
 	SDL_Quit();
 	std::cout<<"~InputManager() --"<<std::endl;
 }
+
+void InputManager::PollJoyEvents() {
+
+	if(SDL_NumJoysticks() <= 0)
+	{
+		return;
+	}
+
+	SDL_Joystick *joystick = nullptr;
+    SDL_JoystickEventState(SDL_ENABLE);
+    joystick = SDL_JoystickOpen(0);
+
+    SDL_Event event;
+    /* Other initializtion code goes here */   
+
+    /* Start main game loop here */
+
+    while(1)
+    {  
+        #if 0
+        switch(event.type)
+        {  
+            case SDL_QUIT:
+            /* Set whatever flags are necessary to */
+            /* end the main game loop here */
+            break;
+        }
+        #endif
+
+        SDL_PollEvent(&event);
+        std::cout<<"~InputManager:PollJoyEvents :"<<event.type<<std::endl;
+
+		
+    }
+	
+    /* End loop here */
+
+}

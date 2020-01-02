@@ -2,5 +2,6 @@
 class InputManager {
 	public:
 	InputManager();
+	void PollJoyEvents();
 	~InputManager();
 };
