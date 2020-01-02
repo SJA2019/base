@@ -22,6 +22,7 @@ file(GLOB SOURCES "Src/*.cpp")
 
 #generate executable from the sources
 add_executable(TestAppExec ${SOURCES})
-target_link_libraries(TestAppExec SDL2main)
+#target_link_libraries(TestAppExec SDL2main)
+target_link_libraries(TestAppExec SDL2-static)
 target_link_libraries(TestAppExec WarDriveLib)
 target_link_libraries(TestAppExec InputManagerLib)
