@@ -35,6 +35,8 @@ void InputManager::PollJoyEvents() {
     joystick = SDL_JoystickOpen(0);
 
     SDL_Event event;
+    bool hasEvent;
+
     /* Other initializtion code goes here */   
 
     /* Start main game loop here */
@@ -51,10 +53,11 @@ void InputManager::PollJoyEvents() {
         }
         #endif
 
-        SDL_PollEvent(&event);
-        std::cout<<"~InputManager:PollJoyEvents :"<<event.type<<std::endl;
-
-		
+        hasEvent=SDL_PollEvent(&event);
+        if(hasEvent==true)
+        {
+            std::cout<<"~InputManager:PollJoyEvents: event.type="<<event.type<<"|event.jbutton.button="<<(Uint32)event.jbutton.button<<"|event.jaxis.value="<<event.jaxis.value<<"|event.jaxis.axis="<<(Uint32)event.jaxis.axis<<std::endl;
+        }		
     }
 	
     /* End loop here */
