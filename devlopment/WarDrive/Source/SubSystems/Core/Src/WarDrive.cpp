@@ -3,7 +3,11 @@
 
 WarDrive::WarDrive() {
 	std::cout<<"WarDrive() ++"<<std::endl;
-	shared_ptr<InputManager> t_sptrInputManager(new InputManager());
+	InputDeviceSelection::DeviceSet inputDeviceSet;
+	inputDeviceSet |= InputDeviceSelection::joyInputDevice;
+	inputDeviceSet |= InputDeviceSelection::mouseInputDevice;
+	inputDeviceSet |= InputDeviceSelection::keyboardDevice;
+	shared_ptr<InputManager> t_sptrInputManager(new InputManager(inputDeviceSet));
 	m_sptrInputManager = t_sptrInputManager;
 	std::cout<<"WarDrive() --"<<std::endl;
 }
