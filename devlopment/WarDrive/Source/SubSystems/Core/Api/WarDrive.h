@@ -8,5 +8,5 @@ class WarDrive {
 	public:
 	WarDrive();
 	~WarDrive();
-	void HandleInput();
+	void Run();
 };

@@ -1,13 +1,9 @@
 #include <iostream>
 #include "SDL.h"
 #include "InputManager.h"
-//#include <gl\glew.h>
 #include <SDL_opengl.h>
-//#include <gl\glu.h>
-//#include <GL3/gl3.h>
 #include <OpenGL/glu.h>
 
-SDL_Window* window = NULL;
 InputManager::InputManager(InputDeviceSelection::DeviceSet inputDeviceSet) {
 	std::cout<<"InputManager() ++"<<std::endl;
 
@@ -31,33 +27,6 @@ InputManager::InputManager(InputDeviceSelection::DeviceSet inputDeviceSet) {
 	{
 		std::cout<<"InputManager(): SDL_Init failed with:"<<inputSelection<<std::endl;	
 	}
-
-        //SDL_Surface* screenSurface = NULL;
-        window = SDL_CreateWindow("SampleRendering..", 
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-            640, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-
-        if (window == NULL) {
-            fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
-            return;
-        }
-#if 0
-        screenSurface = SDL_GetWindowSurface(window);
-
-        if (!screenSurface) {
-            fprintf(stderr, "Screen surface could not be created: %s\n", SDL_GetError());
-            SDL_Quit();
-            return;
-        }
-#endif
-
-        SDL_GLContext context = SDL_GL_CreateContext( window );
-        glClearColor( 1,0,0,1 );
-        glClear(GL_COLOR_BUFFER_BIT);
-        SDL_GL_SwapWindow( window );
-        /* Enable Unicode translation */
-       //SDL_EnableUNICODE( 1 );
-    
     
 	std::cout<<"InputManager(): Number of joysticks found: "<<SDL_NumJoysticks()<<std::endl;
 	std::cout<<"InputManager() ++"<<std::endl;
@@ -69,11 +38,11 @@ InputManager::~InputManager() {
 	std::cout<<"~InputManager() --"<<std::endl;
 }
 
-void InputManager::PollJoyEvents() {
+IMJoyEventTypes InputManager::PollJoyEvents() {
 #if 0
 	if(SDL_NumJoysticks() <= 0)
 	{
-		return;
+		return IMJoyEventTypes::EIMBailout;
 	}
 #endif
     SDL_Event event;
@@ -85,7 +54,7 @@ void InputManager::PollJoyEvents() {
         hasEvent=SDL_PollEvent(&event);
         if (event.type == SDL_QUIT) {
             std::cout<<"InputManager:QUIT."<<std::endl;
-            break;
+            return IMJoyEventTypes::eIMEventBailOut;
         }
         if(hasEvent==true)
         {
@@ -98,26 +67,10 @@ void InputManager::PollJoyEvents() {
             } else {
                 std::cout<<"InputManager:PollJoyEvents: event.type="<<event.type<<"|event.jbutton.button="<<(Uint32)event.jbutton.button<<"|event.jaxis.value="<<event.jaxis.value<<"|event.jaxis.axis="<<(Uint32)event.jaxis.axis<<std::endl;
             }
+            return IMJoyEventTypes::eIMEventAvailable;
+        } else {
+            return IMJoyEventTypes::eIMEventNotAvailable;
         }
-
-        static float red = 0.0;
-        static float green = 0.5;
-        static float blue = 1.0;
-        red+=0.1;
-        green+=0.1;
-        blue+=0.1;
-        red=(red>1)?0.1:red;
-        green=(green>1)?0.1:green;
-        blue=(blue>1)?0.1:blue;
-
-
-
-        glClearColor( red,green,blue,1 );
-        glClear(GL_COLOR_BUFFER_BIT);
-        /*if(nullptr != window) {
-            SDL_GL_SwapWindow( window );
-        }*/
-        SDL_GL_SwapWindow( window );
     }
     /* End loop here */
 }
