@@ -9,4 +9,6 @@ class WarDrive {
 	WarDrive();
 	~WarDrive();
 	void Run();
+	private:
+	void PerformRender();
 };

@@ -1,8 +1,6 @@
 #include <iostream>
 #include "SDL.h"
 #include "InputManager.h"
-#include <SDL_opengl.h>
-#include <OpenGL/glu.h>
 
 InputManager::InputManager(InputDeviceSelection::DeviceSet inputDeviceSet) {
 	std::cout<<"InputManager() ++"<<std::endl;
