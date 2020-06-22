@@ -101,43 +101,10 @@ static const GLfloat g_color_buffer_data[] = {
 
 // Shader sources
 const GLchar *vertexSource =
-    "#version 330 core\
-\
-// Input vertex data, different for all executions of this shader.\
-layout(location = 0) in vec3 vertexPosition_modelspace;\
-layout(location = 1) in vec3 vertexColor;\
-\
-// Output data ; will be interpolated for each fragment.\
-out vec3 fragmentColor;\
-// Values that stay constant for the whole mesh.\
-uniform mat4 MVP;\
-\
-void main(){\
-\
-	// Output position of the vertex, in clip space : MVP * position\
-	gl_Position =  MVP * vec4(vertexPosition_modelspace,1);\
-\
-	// The color of each vertex will be interpolated\
-	// to produce the color of each fragment\
-	fragmentColor = vertexColor;\
-}";
+    "#version 330 core\nlayout(location = 0) in vec3 vertexPosition_modelspace;layout(location = 1) in vec3 vertexColor;out vec3 fragmentColor;uniform mat4 MVP;void main(){gl_Position =  MVP * vec4(vertexPosition_modelspace,1);fragmentColor = vertexColor;}";
 
 const GLchar *fragmentSource =
-    "#version 330 core\
-\
-// Interpolated values from the vertex shaders\
-in vec3 fragmentColor;\
-\
-// Ouput data\
-out vec3 color;\
-\
-void main(){\
-\
-	// Output color = color specified in the vertex shader,\
-	// interpolated between all 3 surrounding vertices\
-	color = fragmentColor;\
-\
-}";
+    "#version 330 core\nin vec3 fragmentColor;out vec3 color;void main(){color = fragmentColor;}";
 
 SDL_Window *window = NULL;
 
@@ -146,6 +113,9 @@ GLuint MatrixID;
 GLuint vertexbuffer;
 GLuint colorbuffer;
 glm::mat4 MVP;
+
+//glGetShaderInfoLog
+char shaderInfoLog[256];
 
 WarDrive::WarDrive()
 {
@@ -176,6 +146,11 @@ WarDrive::WarDrive()
             return;
         }
 #endif
+#ifdef __APPLE__
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+#endif
 
     SDL_GLContext context = SDL_GL_CreateContext(window);
 
@@ -189,16 +164,25 @@ WarDrive::WarDrive()
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
-
+#if 1
     // Create and compile the vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
 
+    GLsizei logSize;
+    glGetShaderInfoLog(vertexShader, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"vertexShader status:"<<shaderInfoLog;
+
     // Create and compile the fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
+
+    glGetShaderInfoLog(fragmentShader, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"fragmentShader status:"<<shaderInfoLog;
 
     // Link the vertex and fragment shader into a shader program
     programID = glCreateProgram();
@@ -206,6 +190,21 @@ WarDrive::WarDrive()
     glAttachShader(programID, fragmentShader);
     // glBindFragDataLocation(shaderProgram, 0, "outColor");
     glLinkProgram(programID);
+
+
+    glGetProgramInfoLog(programID, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"programStatus status:"<<shaderInfoLog;
+#endif
+#if 0
+    // Create and compile our GLSL program from the shaders
+	programID = LoadShaders( "TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader" );
+    glGetProgramInfoLog(programID, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"programStatus status:"<<shaderInfoLog;
+
+#endif
+
     glUseProgram(programID);
 
     // Get a handle for our "MVP" uniform
@@ -261,6 +260,10 @@ void WarDrive::Run()
         }
         else if (IMJoyEventTypes::eIMEventAvailable == inputEvent)
         {
+            MVP = MVP + glm::mat4(0.01f, 0.0f, 0.0f, 0.0f,
+                                  0.0f, 0.0f, 0.0f, 0.0f,
+                                  0.0f, 0.0f, 0.0f, 0.0f,
+                                  0.0f, 0.0f, 0.0f, 0.0f);
             PerformRender();
         }
     }
