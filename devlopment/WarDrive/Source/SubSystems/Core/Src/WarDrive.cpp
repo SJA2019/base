@@ -112,6 +112,11 @@ GLuint programID;
 GLuint MatrixID;
 GLuint vertexbuffer;
 GLuint colorbuffer;
+
+float angle = 0.0f;
+glm::mat4 Model;
+glm::mat4 View;
+glm::mat4 Projection;
 glm::mat4 MVP;
 
 //glGetShaderInfoLog
@@ -211,15 +216,15 @@ WarDrive::WarDrive()
     MatrixID = glGetUniformLocation(programID, "MVP");
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+    Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
     // Camera matrix
-    glm::mat4 View = glm::lookAt(
+    View = glm::lookAt(
         glm::vec3(4, 3, -3), // Camera is at (4,3,-3), in World Space
         glm::vec3(0, 0, 0),  // and looks at the origin
         glm::vec3(0, 1, 0)   // Head is up (set to 0,-1,0 to look upside-down)
     );
     // Model matrix : an identity matrix (model will be at the origin)
-    glm::mat4 Model = glm::mat4(1.0f);
+    Model = glm::mat4(1.0f);
     // Our ModelViewProjection : multiplication of our 3 matrices
     MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
@@ -260,10 +265,19 @@ void WarDrive::Run()
         }
         else if (IMJoyEventTypes::eIMEventAvailable == inputEvent)
         {
+            angle += 0.001f;
+            if(angle>360.0f) {
+                angle = 0.0f;
+            }
+            glm::vec3 myRotationAxis( 1.0f, 1.0f, 1.0f);
+            Model = glm::rotate(Model, angle, myRotationAxis );
+            MVP = Projection * View * Model;
+            #if 0
             MVP = MVP + glm::mat4(0.01f, 0.0f, 0.0f, 0.0f,
                                   0.0f, 0.0f, 0.0f, 0.0f,
                                   0.0f, 0.0f, 0.0f, 0.0f,
                                   0.0f, 0.0f, 0.0f, 0.0f);
+            #endif
             PerformRender();
         }
     }
