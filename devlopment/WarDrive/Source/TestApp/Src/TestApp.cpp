@@ -8,5 +8,3 @@ int main() {
 	shared_ptr<WarDrive> t_pWarDrive(new WarDrive());
 	t_pWarDrive->Run();
 }
-
-

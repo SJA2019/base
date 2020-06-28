@@ -9,6 +9,11 @@
             "command": "cd ${workspaceFolder}/Scripts/; sh build.sh; cd -"
         },
         {
+            "label": "wdCMakeDebug",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/Scripts/; sh build.sh -debug; cd -"
+        },
+        {
             "label": "wdCleanBuild",
             "type": "shell",
             "command": "cd ${workspaceFolder}/Scripts/; sh build.sh -skip-cmake; cd -"

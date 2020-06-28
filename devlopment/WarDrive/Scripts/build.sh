@@ -1,12 +1,17 @@
 #! /bin/sh
 
-echo "usage: ./build.sh [-skip-cmake] [-skip-clean]"
+usage="usage: ./build.sh [-h][-skip-cmake][-skip-clean][-debug]"
 
-echo "$0,$1:begining.."
+echo "begining stript:"
+for arg in "$@"
+do
+  echo $arg
+done
+echo "..."
 
 skip_clean=0
 skip_cmake=0
-
+build_mode="Release"
 
 for arg in "$@"
 do
@@ -17,23 +22,32 @@ do
         -skip-clean)
         skip_clean=1
         ;;
+        -debug)
+        build_mode="Debug"
+        ;;
+        -h)
+        echo $usage
+        exit 0
+        ;;
     esac
 done
 
+## run CMAKE
+#
 if [ $skip_cmake -eq 0 ]
 then
   rm -rf ../Source/TestApp/Build
   mkdir ../Source/TestApp/Build
   echo "running-cmake.."
   cd ../Source/TestApp/Build
-  cmake ..
+  cmake -DCMAKE_BUILD_TYPE=$build_mode ..
   cd -
 fi 
 
-
+## build TestApp
+#
 cd ../Source/TestApp/Build
 echo "starting TestApp build.."
-
 if [ $skip_clean -eq 0 ]
 then
 echo "running make-clean.."
@@ -41,7 +55,6 @@ make clean
 fi
 echo "running-make.."
 make
-
 cd -
 
 echo "done TestApp build.."

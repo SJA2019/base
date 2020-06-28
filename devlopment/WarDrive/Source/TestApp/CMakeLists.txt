@@ -9,9 +9,6 @@ add_subdirectory(../Thirdparty/SDL ./SDL)
 add_subdirectory(../SubSystems/InputManager ./InputManager )
 add_subdirectory(../SubSystems/Core ./Core )
 
-#set the build mode : TBD make this configurable.
-set(CMAKE_BUILD_TYPE Release)
-
 #Specify the include folder.
 include_directories(Src)
 include_directories(../SubSystems/InputManager/Api)
