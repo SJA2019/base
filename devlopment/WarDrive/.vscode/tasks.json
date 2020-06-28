@@ -1,0 +1,27 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "wdCMake",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/Scripts/; sh build.sh; cd -"
+        },
+        {
+            "label": "wdCleanBuild",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/Scripts/; sh build.sh -skip-cmake; cd -"
+        },
+        {
+            "label": "wdBuild",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/Scripts/; sh build.sh -skip-cmake -skip-clean; cd -"
+        },
+        {
+            "label": "wdRun",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/Source/TestApp/Build/;./TestAppExec;cd -"
+        }
+    ]
+}
