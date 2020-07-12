@@ -26,14 +26,14 @@ target_link_libraries(TestAppExec SDL2-static)
 target_link_libraries(TestAppExec WarDriveLib)
 target_link_libraries(TestAppExec InputManagerLib)
 
-#add_custom_command(
-#        TARGET TestAppExec POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy
-#                Src/ColorFragmentShader.fragmentshader
-#                ${CMAKE_CURRENT_BINARY_DIR}/ColorFragmentShader.fragmentshader)
+add_custom_command(
+        TARGET TestAppExec POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/Src/ColorFragmentShader.fragmentshader
+                ${CMAKE_CURRENT_BINARY_DIR}/ColorFragmentShader.fragmentshader)
 
-#add_custom_command(
-#        TARGET TestAppExec POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy
-#                Src/TransformVertexShader.vertexshader
-#                ${CMAKE_CURRENT_BINARY_DIR}/TransformVertexShader.vertexshader)
+add_custom_command(
+        TARGET TestAppExec POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/Src/TransformVertexShader.vertexshader
+                ${CMAKE_CURRENT_BINARY_DIR}/TransformVertexShader.vertexshader)

@@ -1,19 +1,19 @@
 #include "SDL.h"
-#ifdef __APPLE__
-#include <OpenGL/gl3.h>
-#include <OpenGL/gl3ext.h>
-#else
-#include <SDL_opengl.h>
-#endif
-#include <OpenGL/glu.h>
 
 // Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace glm;
+#include <string>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+
 #include "WarDrive.h"
+
+
 
 //Notes:
 //opengl/SDL includes : https://stackoverflow.com/questions/22118518/use-of-undeclared-identifier-glgenvertexarrays-error-even-after-including-open
@@ -69,7 +69,8 @@ static const GLfloat g_vertex_buffer_data[] = {
     
     1.0f, 1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
-    1.0f, -1.0f, 1.0f};
+    1.0f, -1.0f, 1.0f  
+};
 
 // One color for each vertex. They were generated randomly.
 static const GLfloat g_color_buffer_data[] = {
@@ -119,7 +120,8 @@ static const GLfloat g_color_buffer_data[] = {
     
     1.0f, 1.0f, 1.0f,
     0.0f, 1.0f, 1.0f,
-    1.0f, 0.0f, 1.0f};
+    1.0f, 0.0f, 1.0f
+};
 
 // Shader sources
 const GLchar *vertexSource =
@@ -130,12 +132,11 @@ const GLchar *fragmentSource =
 
 SDL_Window *window = NULL;
 
-GLuint programID;
+
 GLuint MatrixID;
 GLuint vertexbuffer;
 GLuint colorbuffer;
 
-float angle = 0.0f;
 glm::mat4 Model;
 glm::mat4 View;
 glm::mat4 Projection;
@@ -191,45 +192,12 @@ WarDrive::WarDrive()
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
-#if 1
-    // Create and compile the vertex shader
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexSource, NULL);
-    glCompileShader(vertexShader);
 
-    GLsizei logSize;
-    glGetShaderInfoLog(vertexShader, 256, &logSize, shaderInfoLog);
-    shaderInfoLog[256]='\0';
-    std::cout<<"vertexShader status:"<<shaderInfoLog;
-
-    // Create and compile the fragment shader
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-    glCompileShader(fragmentShader);
-
-    glGetShaderInfoLog(fragmentShader, 256, &logSize, shaderInfoLog);
-    shaderInfoLog[256]='\0';
-    std::cout<<"fragmentShader status:"<<shaderInfoLog;
-
-    // Link the vertex and fragment shader into a shader program
-    programID = glCreateProgram();
-    glAttachShader(programID, vertexShader);
-    glAttachShader(programID, fragmentShader);
-    // glBindFragDataLocation(shaderProgram, 0, "outColor");
-    glLinkProgram(programID);
-
-
-    glGetProgramInfoLog(programID, 256, &logSize, shaderInfoLog);
-    shaderInfoLog[256]='\0';
-    std::cout<<"programStatus status:"<<shaderInfoLog;
-#endif
-#if 0
-    // Create and compile our GLSL program from the shaders
-	programID = LoadShaders( "TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader" );
-    glGetProgramInfoLog(programID, 256, &logSize, shaderInfoLog);
-    shaderInfoLog[256]='\0';
-    std::cout<<"programStatus status:"<<shaderInfoLog;
-
+#define PROGRAM_FROM_STRING 0
+#if PROGRAM_FROM_STRING
+    programID = CreateProgramFromShaderText(vertexSource, fragmentSource);
+#else
+    programID = CreateProgramFromShaderFiles("TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader");
 #endif
 
     glUseProgram(programID);
@@ -241,7 +209,7 @@ WarDrive::WarDrive()
     Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
     // Camera matrix
     View = glm::lookAt(
-        glm::vec3(4, 3, -3), // Camera is at (4,3,-3), in World Space
+        glm::vec3(4.0f, 3.0f, -3.0f), // Camera is at (4,3,-3), in World Space
         glm::vec3(0, 0, 0),  // and looks at the origin
         glm::vec3(0, 1, 0)   // Head is up (set to 0,-1,0 to look upside-down)
     );
@@ -277,29 +245,20 @@ WarDrive::~WarDrive()
 
 void WarDrive::Run()
 {
-    IMJoyEventTypes inputEvent = IMJoyEventTypes::eIMEventNotAvailable;
+    IMEvent inputEvent = {eIMEventNotAvailable, SDL_EventType()};
     while (true)
     {
         inputEvent = m_sptrInputManager->PollJoyEvents();
-        if (IMJoyEventTypes::eIMEventBailOut == inputEvent)
+        if (EIMJoyEventType::eIMEventBailOut == inputEvent.eventType)
         {
             break;
         }
-        else if (IMJoyEventTypes::eIMEventAvailable == inputEvent)
+        else if (EIMJoyEventType::eIMEventAvailable == inputEvent.eventType)
         {
-            angle += 0.0001f;
-            if(angle>360.0f) {
-                angle = 0.0f;
-            }
             glm::vec3 myRotationAxis( 1.0f, 1.0f, 1.0f);
+            float angle = 0.01f;
             Model = glm::rotate(Model, angle, myRotationAxis );
             MVP = Projection * View * Model;
-            #if 0
-            MVP = MVP + glm::mat4(0.01f, 0.0f, 0.0f, 0.0f,
-                                  0.0f, 0.0f, 0.0f, 0.0f,
-                                  0.0f, 0.0f, 0.0f, 0.0f,
-                                  0.0f, 0.0f, 0.0f, 0.0f);
-            #endif
             PerformRender();
         }
     }
@@ -366,4 +325,143 @@ void WarDrive::PerformRender()
     // Clear the screen
     //
     SDL_GL_SwapWindow(window);
+}
+
+GLuint WarDrive::CreateProgramFromShaderText(const GLchar *vertexShaderAsString, const GLchar *fragmentShaderAsString) {
+    GLuint programID;
+
+    // Create and compile the vertex shader
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderAsString, NULL);
+    glCompileShader(vertexShader);
+
+    GLsizei logSize;
+    glGetShaderInfoLog(vertexShader, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+
+    std::cout<<"vertexShader status:"<<shaderInfoLog;
+
+    // Create and compile the fragment shader
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderAsString, NULL);
+    glCompileShader(fragmentShader);
+
+    glGetShaderInfoLog(fragmentShader, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"fragmentShader status:"<<shaderInfoLog;
+
+    // Link the vertex and fragment shader into a shader program
+    programID = glCreateProgram();
+    glAttachShader(programID, vertexShader);
+    glAttachShader(programID, fragmentShader);
+    glLinkProgram(programID);
+
+
+    glGetProgramInfoLog(programID, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"programStatus status:"<<shaderInfoLog;
+
+    return programID;
+}
+
+GLuint WarDrive::CreateProgramFromShaderFiles(const char *vertexShaderFileName, const char *fragmentShaderFileName) {
+    GLuint programID;
+
+    // Create and compile our GLSL program from the shaders
+    GLsizei logSize;
+	programID = LoadShaders( vertexShaderFileName, fragmentShaderFileName );
+    glGetProgramInfoLog(programID, 256, &logSize, shaderInfoLog);
+    shaderInfoLog[256]='\0';
+    std::cout<<"programStatus status:"<<shaderInfoLog;
+
+    return programID;
+}
+
+
+GLuint WarDrive::LoadShaders(const char * vertex_file_path,const char * fragment_file_path) {
+
+	// Create the shaders
+	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+	// Read the Vertex Shader code from the file
+	std::string VertexShaderCode;
+	std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+	if(VertexShaderStream.is_open()){
+		std::stringstream sstr;
+		sstr << VertexShaderStream.rdbuf();
+		VertexShaderCode = sstr.str();
+		VertexShaderStream.close();
+	}else{
+		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+		//getchar();
+		return 0;
+	}
+
+	// Read the Fragment Shader code from the file
+	std::string FragmentShaderCode;
+	std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+	if(FragmentShaderStream.is_open()){
+		std::stringstream sstr;
+		sstr << FragmentShaderStream.rdbuf();
+		FragmentShaderCode = sstr.str();
+		FragmentShaderStream.close();
+	}
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+
+	// Compile Vertex Shader
+	printf("Compiling shader : %s\n", vertex_file_path);
+	char const * VertexSourcePointer = VertexShaderCode.c_str();
+	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
+	glCompileShader(VertexShaderID);
+
+	// Check Vertex Shader
+	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		printf("%s\n", &VertexShaderErrorMessage[0]);
+	}
+
+	// Compile Fragment Shader
+	printf("Compiling shader : %s\n", fragment_file_path);
+	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
+	glCompileShader(FragmentShaderID);
+
+	// Check Fragment Shader
+	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
+		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+		printf("%s\n", &FragmentShaderErrorMessage[0]);
+	}
+
+	// Link the program
+	printf("Linking program\n");
+	GLuint ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, VertexShaderID);
+	glAttachShader(ProgramID, FragmentShaderID);
+	glLinkProgram(ProgramID);
+
+	// Check the program
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
+		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+		printf("%s\n", &ProgramErrorMessage[0]);
+	}
+	
+	glDetachShader(ProgramID, VertexShaderID);
+	glDetachShader(ProgramID, FragmentShaderID);
+	
+	glDeleteShader(VertexShaderID);
+	glDeleteShader(FragmentShaderID);
+
+	return ProgramID;
 }

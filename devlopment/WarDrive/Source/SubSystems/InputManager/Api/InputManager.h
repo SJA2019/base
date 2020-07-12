@@ -10,15 +10,20 @@ typedef class InputDeviceSelection {
 	typedef std::bitset<sizeof(uint8_t)> DeviceSet;
 };
 
-typedef enum IMJoyEventTypes {
+typedef enum IMEventType {
 	eIMEventNotAvailable = 0,
 	eIMEventAvailable,
 	eIMEventBailOut
-} EIMJoyEventTypes;
+} EIMJoyEventType;
+
+struct IMEvent {
+	EIMJoyEventType eventType;
+	SDL_Event sdlEvent;
+};
 
 class InputManager {
 	public:
 	InputManager(InputDeviceSelection::DeviceSet inputDeviceSet);
-	EIMJoyEventTypes PollJoyEvents();
+	IMEvent PollJoyEvents();
 	~InputManager();
 };

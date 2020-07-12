@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <SDL.h>
 #include "WarDrive.h"
 
 using namespace std;
