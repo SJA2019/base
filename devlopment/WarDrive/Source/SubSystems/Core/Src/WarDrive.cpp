@@ -138,6 +138,13 @@ GLuint vertexbuffer;
 GLuint colorbuffer;
 
 glm::mat4 Model;
+
+float camX = 4.0f;
+float camY = 3.0f;
+float camZ = 3.0f;
+float camTX = 0.0f;
+float camTY = 0.0f;
+float camTZ = 0.0f;
 glm::mat4 View;
 glm::mat4 Projection;
 glm::mat4 MVP;
@@ -209,8 +216,8 @@ WarDrive::WarDrive()
     Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
     // Camera matrix
     View = glm::lookAt(
-        glm::vec3(4.0f, 3.0f, -3.0f), // Camera is at (4,3,-3), in World Space
-        glm::vec3(0, 0, 0),  // and looks at the origin
+        glm::vec3(camX, camY, camZ), // Camera is at (4,3,-3), in World Space
+        glm::vec3(camTX, camTY, camTZ),  // and looks at the origin
         glm::vec3(0, 1, 0)   // Head is up (set to 0,-1,0 to look upside-down)
     );
     // Model matrix : an identity matrix (model will be at the origin)
@@ -255,10 +262,82 @@ void WarDrive::Run()
         }
         else if (EIMJoyEventType::eIMEventAvailable == inputEvent.eventType)
         {
-            glm::vec3 myRotationAxis( 1.0f, 1.0f, 1.0f);
-            float angle = 0.01f;
-            Model = glm::rotate(Model, angle, myRotationAxis );
-            MVP = Projection * View * Model;
+            float x = 0.0f;
+            float y = 0.0f;
+            float z = 0.0f;
+            float camXOffset = 0.0f;
+            float camYOffset = 0.0f;
+            float camZOffset = 0.0f;
+            
+            switch(inputEvent.sdlEvent.key.keysym.sym) {
+                case 'x':
+                    x = 1.0f;
+                break;
+                case 'y':
+                    y = 1.0f;
+                break;
+                case 'z':
+                    z = 1.0f;
+                break;
+                case SDLK_SPACE:
+                    x = 1.0f;
+                    y = 1.0f;
+                    z = 1.0f;
+                break;
+                case SDLK_UP:
+                    camYOffset++;
+                break;
+                case SDLK_DOWN:
+                    camYOffset--;
+                break;
+                case SDLK_RIGHT:
+                    camXOffset++;
+                break;
+                case SDLK_LEFT:
+                    camXOffset--;
+                break;
+                case '.':
+                    camZOffset++;
+                break;
+                case ',':
+                    camZOffset--;
+                break;
+                case 'o':
+                    camTX = camTY = camTZ = 0;
+                break;
+                default:
+                //noop.
+                break;
+            }
+
+            if( (!((camXOffset==0) && (camYOffset==0) && (camZOffset==0))) ||
+                  ((camTX==0) && (camTY==0) && (camTZ==0)) ) {
+
+                camX+= camXOffset;
+                camY+= camYOffset;
+                camZ+= camZOffset;
+
+                camTX+= camXOffset;
+                camTY+= camYOffset;
+                camTZ+= camZOffset;
+
+                std::cout<<"cam-pos="<<camX<<","<<camY<<","<<camZ<<" cam-target="<<camTX<<","<<camTY<<","<<camTZ;
+                View = glm::lookAt(
+                        glm::vec3(camX, camY, camZ), // Camera is at (4,3,-3), in World Space
+                        glm::vec3(camTX, camTY, camTZ),  // and looks at the origin
+                        glm::vec3(0, 1, 0)   // Head is up (set to 0,-1,0 to look upside-down)
+                        );
+                MVP = Projection * View * Model;
+            }            
+
+            if((x!=0) || (y!=0) || (z!=0)) {
+                std::cout<<"obj-pos="<<x<<","<<y<<","<<z;
+                glm::vec3 myRotationAxis( x, y, z);
+                float angle = 0.01f;
+                Model = glm::rotate(Model, angle, myRotationAxis );
+                MVP = Projection * View * Model;
+            }
+
             PerformRender();
         }
     }
