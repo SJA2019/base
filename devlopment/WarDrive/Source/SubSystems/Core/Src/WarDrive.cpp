@@ -262,28 +262,59 @@ void WarDrive::Run()
         }
         else if (EIMJoyEventType::eIMEventAvailable == inputEvent.eventType)
         {
-            float x = 0.0f;
-            float y = 0.0f;
-            float z = 0.0f;
+            float objRotX = 0.0f;
+            float objRotY = 0.0f;
+            float objRotZ = 0.0f;
+
+            float objXOffset = 0.0f;
+            float objYOffset = 0.0f;
+            float objZOffset = 0.0f;
+
+
             float camXOffset = 0.0f;
             float camYOffset = 0.0f;
             float camZOffset = 0.0f;
             
             switch(inputEvent.sdlEvent.key.keysym.sym) {
+                //Rotate object 'x','y','z'
+                //
                 case 'x':
-                    x = 1.0f;
+                    objRotX = 1.0f;
                 break;
                 case 'y':
-                    y = 1.0f;
+                    objRotY = 1.0f;
                 break;
                 case 'z':
-                    z = 1.0f;
+                    objRotZ = 1.0f;
                 break;
                 case SDLK_SPACE:
-                    x = 1.0f;
-                    y = 1.0f;
-                    z = 1.0f;
+                    objRotX = 1.0f;
+                    objRotY = 1.0f;
+                    objRotZ = 1.0f;
                 break;
+                //Move Object up/down/left/right
+                //
+                case SDLK_1:
+                    objYOffset++;
+                break;
+                case SDLK_2:
+                    objYOffset--;
+                break;
+                case SDLK_3:
+                    objXOffset++;
+                break;
+                case SDLK_4:
+                    objXOffset--;
+                break;
+                case SDLK_5:
+                    objZOffset++;
+                break;
+                case SDLK_6:
+                    objZOffset--;
+                break;
+                
+                //Move Camera up/down/left/right
+                //
                 case SDLK_UP:
                     camYOffset++;
                 break;
@@ -296,13 +327,16 @@ void WarDrive::Run()
                 case SDLK_LEFT:
                     camXOffset--;
                 break;
+                //Move Camera forward/back
+                //
                 case '.':
                     camZOffset++;
                 break;
                 case ',':
                     camZOffset--;
                 break;
-                case 'o':
+                //Focus Camera on object
+                case '/':
                     camTX = camTY = camTZ = 0;
                 break;
                 default:
@@ -310,6 +344,8 @@ void WarDrive::Run()
                 break;
             }
 
+            //Edit Camera Coordinaties(View)
+            //
             if( (!((camXOffset==0) && (camYOffset==0) && (camZOffset==0))) ||
                   ((camTX==0) && (camTY==0) && (camTZ==0)) ) {
 
@@ -330,11 +366,20 @@ void WarDrive::Run()
                 MVP = Projection * View * Model;
             }            
 
-            if((x!=0) || (y!=0) || (z!=0)) {
-                std::cout<<"obj-pos="<<x<<","<<y<<","<<z;
-                glm::vec3 myRotationAxis( x, y, z);
+            //Edit Object coordinates (Model)
+            //
+            if((objRotX!=0) || (objRotY!=0) || (objRotZ!=0)) {
+                std::cout<<"obj-rotation-axis="<<objRotX<<","<<objRotY<<","<<objRotZ;
+                glm::vec3 myRotationAxis( objRotX, objRotY, objRotZ);
                 float angle = 0.01f;
                 Model = glm::rotate(Model, angle, myRotationAxis );
+                MVP = Projection * View * Model;
+            }
+
+            if((objXOffset!=0) || (objYOffset!=0) || (objZOffset!=0)) {
+                std::cout<<"obj-position-offsets="<<objXOffset<<","<<objYOffset<<","<<objZOffset;
+                glm::vec3 offsetPosition( objXOffset, objYOffset, objZOffset);
+                Model = glm::translate(Model, offsetPosition);
                 MVP = Projection * View * Model;
             }
 
