@@ -8,6 +8,7 @@ project(WarDrive)
 include_directories(Src)
 include_directories(Api)
 include_directories(../InputManager/Api)
+include_directories(../Renderer/Api)
 include_directories(../../Thirdparty/SDL/include)
 include_directories(../../Thirdparty/GLM)
 

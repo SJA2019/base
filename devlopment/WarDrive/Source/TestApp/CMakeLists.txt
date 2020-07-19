@@ -8,11 +8,14 @@ project(TestApp)
 add_subdirectory(../Thirdparty/SDL ./SDL)
 add_subdirectory(../SubSystems/InputManager ./InputManager )
 add_subdirectory(../SubSystems/Core ./Core )
+add_subdirectory(../SubSystems/Renderer ./Renderer )
 
 #Specify the include folder.
 include_directories(Src)
+include_directories(../Thirdparty/GLM)
 include_directories(../SubSystems/InputManager/Api)
 include_directories(../SubSystems/Core/Api)
+include_directories(../SubSystems/Renderer/Api)
 
 #create a SOURCES parameter, the file(GLOB...) allows for wildcard additions:
 file(GLOB SOURCES "Src/*.cpp")
@@ -25,6 +28,7 @@ SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL")
 target_link_libraries(TestAppExec SDL2-static)
 target_link_libraries(TestAppExec WarDriveLib)
 target_link_libraries(TestAppExec InputManagerLib)
+target_link_libraries(TestAppExec RendererLib)
 
 add_custom_command(
         TARGET TestAppExec POST_BUILD
