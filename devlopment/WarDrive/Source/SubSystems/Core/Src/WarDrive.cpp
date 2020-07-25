@@ -34,7 +34,7 @@ void WarDrive::Run()
         }
         else if (EIMJoyEventType::eIMEventAvailable == inputEvent.eventType)
         {
-            if(nullptr != rendererInstance) {
+            if(nullptr != rendererInstance && inputEvent.sdlEvent.key.state != SDL_RELEASED) {
                 rendererInstance->HandleInput(inputEvent.sdlEvent.key.keysym.sym);
                 rendererInstance->Render();
             }
