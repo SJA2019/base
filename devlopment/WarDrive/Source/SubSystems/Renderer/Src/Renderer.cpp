@@ -18,17 +18,6 @@ using namespace glm;
 //on the fly shaders: https://gist.github.com/SuperV1234/5c5ad838fe5fe1bf54f9
 //cube sample: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-4-a-colored-cube/ / https://github.com/opengl-tutorials/ogl/blob/master/tutorial04_colored_cube/tutorial04.cpp
 
-//Camera.
-glm::mat4 View;
-glm::mat4 Projection;
-float camX = 0.0f;//4.0f;
-float camY = 0.0f;//3.0f;
-float camZ = 20.0f;
-float camTX = 0.0f;
-float camTY = 0.0f;
-float camTZ = 0.0f;
-
-
 //Window
 SDL_Window *window = NULL;
 
@@ -52,35 +41,52 @@ Renderer::Renderer()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #endif
 
-    SDL_GLContext context = SDL_GL_CreateContext(window);
-    pipelineInstance = make_shared<Pipeline>();
-    objectInstance = make_shared<Object>();
+    cameraInstance = make_shared<Camera>();
+    cameraInstance->setPosition(0,0,20);
+    cameraInstance->setTargetPositionLookedAt(0,0,0);
 
+    SDL_GLContext context = SDL_GL_CreateContext(window);
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
 
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+    //pipelineInstance = make_shared<Pipeline>();
+    //objectInstance = make_shared<Object>();
+    currentRenderingIdx = 0;
+    
+    //
+    auto object = make_shared<Object>();
+    object->translate(glm::vec3(5,0,0));
+    auto pipeline = make_shared<Pipeline>();
+    auto pair = make_shared<ObjPipePair>();
+    pair->objectInstance = object;
+    pair->pipelineInstance = pipeline;
+    renderList.push_back(pair);
 
-    auto programID = pipelineInstance->GetProgramId();
-    glUseProgram(programID);
+    //
+    object = make_shared<Object>();
+    object->translate(glm::vec3(-5,0,0));
+    pipeline = make_shared<Pipeline>();
+    pair = make_shared<ObjPipePair>();
+    pair->objectInstance = object;
+    pair->pipelineInstance = pipeline;
+    renderList.push_back(pair);
 
-    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-    // Camera matrix
-    View = glm::lookAt(
-        glm::vec3(camX, camY, camZ), // Camera is at (4,3,-3), in World Space
-        glm::vec3(camTX, camTY, camTZ),  // and looks at the origin
-        glm::vec3(0, 1, 0)   // Head is up (set to 0,-1,0 to look upside-down)
-    );
 
+    
     // Our ModelViewProjection : multiplication of our 3 matrices
-    auto Model = objectInstance->getModelMatrix();
-    pipelineInstance->updateMVPMatrix(Projection * View * Model);
-
+    auto View = cameraInstance->getViewMatrix();
+    auto Projection = cameraInstance->getProjectionMatrix();
+    for (ObjPipePairSPTR item : renderList) {
+      //auto programID = pipelineInstance->GetProgramId();
+      //glUseProgram(programID);
+      auto objectInstance = item->objectInstance;
+      auto pipelineInstance = item->pipelineInstance;
+      auto Model = objectInstance->getModelMatrix();
+      pipelineInstance->updateMVPMatrix(Projection * View * Model);
+    }
+    
     std::cout << "Renderer() --" << std::endl;
 }
 
@@ -100,7 +106,6 @@ void Renderer::HandleInput(SDL_Keycode input) {
             float objXOffset = 0.0f;
             float objYOffset = 0.0f;
             float objZOffset = 0.0f;
-
 
             float camXOffset = 0.0f;
             float camYOffset = 0.0f;
@@ -168,33 +173,38 @@ void Renderer::HandleInput(SDL_Keycode input) {
                 break;
                 //Focus Camera on object
                 case '/':
-                    camTX = camTY = camTZ = 0;
+                    cameraInstance->setPosition(0,0,0);
+                break;
+                case 'n':
+                    currentRenderingIdx++;
+                    if(currentRenderingIdx >= renderList.size()) {
+                        currentRenderingIdx = 0;
+                    }
                 break;
                 default:
                 //noop.
                 break;
             }
 
+            auto View = cameraInstance->getViewMatrix();
+            auto Projection = cameraInstance->getProjectionMatrix();
+            auto objectInstance = renderList[currentRenderingIdx]->objectInstance;
+            auto pipelineInstance = renderList[currentRenderingIdx]->pipelineInstance;
+            auto MVP = Projection * View * objectInstance->getModelMatrix();
+
             //Edit Camera Coordinaties(View)
             //
             if( (!((camXOffset==0) && (camYOffset==0) && (camZOffset==0))) ||
-                  ((camTX==0) && (camTY==0) && (camTZ==0)) ) {
+                  (cameraInstance->isLookingAtOrigin()) ) {
+                
+                cameraInstance->movePosition(camXOffset, camYOffset, camZOffset);
+                cameraInstance->moveTargetPositionLookedAt(camXOffset, camYOffset, camZOffset);
 
-                camX+= camXOffset;
-                camY+= camYOffset;
-                camZ+= camZOffset;
-
-                camTX+= camXOffset;
-                camTY+= camYOffset;
-                camTZ+= camZOffset;
-
-                std::cout<<"cam-pos="<<camX<<","<<camY<<","<<camZ<<" cam-target="<<camTX<<","<<camTY<<","<<camTZ;
-                View = glm::lookAt(
-                        glm::vec3(camX, camY, camZ), // Camera is at (4,3,-3), in World Space
-                        glm::vec3(camTX, camTY, camTZ),  // and looks at the origin
-                        glm::vec3(0, 1, 0)   // Head is up (set to 0,-1,0 to look upside-down)
-                        );
+                //std::cout<<"cam-pos="<<camX<<","<<camY<<","<<camZ<<" cam-target="<<camTX<<","<<camTY<<","<<camTZ;
+                auto View = cameraInstance->getViewMatrix();
+                auto Projection = cameraInstance->getProjectionMatrix();
                 auto MVP = Projection * View * objectInstance->getModelMatrix();
+
                 pipelineInstance->updateMVPMatrix(MVP);
             }            
 
@@ -242,12 +252,18 @@ void Renderer::PerformRender()
     blue = (blue > 1) ? 0.1 : blue;
     glClearColor(red, green, blue, 1);
 
-    //Draw..
-    //
-    auto programID = pipelineInstance->GetProgramId();
-    glUseProgram(programID);
-    pipelineInstance->submitMVPMatrix();
-    objectInstance->Draw();
+    for (ObjPipePairSPTR item : renderList) {
+      auto objectInstance = item->objectInstance;
+      auto pipelineInstance = item->pipelineInstance;
+
+        //Draw..
+        //
+        auto programID = pipelineInstance->GetProgramId();
+        glUseProgram(programID);
+        pipelineInstance->submitMVPMatrix();
+        objectInstance->Draw();
+
+    }
 
     SDL_GL_SwapWindow(window);
 }

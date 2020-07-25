@@ -158,23 +158,23 @@ GLuint Pipeline::LoadShaders(const char * vertex_file_path,const char * fragment
 
 Pipeline::Pipeline(){
 	
-	programID = 0;
+	m_programID = 0;
 	MVP = glm::mat4();
 
 	#define PROGRAM_FROM_STRING 0
 #if PROGRAM_FROM_STRING
-    programID = CreateProgramFromShaderText(vertexSource, fragmentSource);
+    m_programID = CreateProgramFromShaderText(vertexSource, fragmentSource);
 #else
-    programID = CreateProgramFromShaderFiles("TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader");
+    m_programID = CreateProgramFromShaderFiles("TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader");
 #endif
 
 	// Get a handle for our "MVP" uniform
     //MatrixID = glGetUniformLocation(programID, "MVP");
-	MatrixID = glGetUniformLocation(programID, "MVP");
+	MatrixID = glGetUniformLocation(m_programID, "MVP");
 }
 
 GLuint Pipeline::GetProgramId() {
-	return programID;
+	return m_programID;
 }
 
 GLuint Pipeline::updateMVPMatrix(glm::mat4 MVPIn) {
@@ -182,6 +182,7 @@ GLuint Pipeline::updateMVPMatrix(glm::mat4 MVPIn) {
 }
 
 void Pipeline::submitMVPMatrix() {
+	glUseProgram(m_programID);
 	// Send our transformation to the currently bound shader,
     // in the "MVP" uniform
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);

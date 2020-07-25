@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <vector>
 
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
@@ -10,23 +11,31 @@
 #include <OpenGL/glu.h>
 
 #include "Object.h"
+#include "Camera.h"
 #include "Pipeline.h"
 
 using namespace std;
+
+
+
+typedef struct OBJPIPPAIR {
+	ObjectSPTR objectInstance = nullptr;
+	PipelineSPTR pipelineInstance = nullptr;
+} ObjPipePair;
+typedef shared_ptr<ObjPipePair> ObjPipePairSPTR;
 
 class Renderer {
 
 	public:
 	Renderer();
 	~Renderer();
-
 	void HandleInput(SDL_Keycode input);
 	void Render();
 
 	private:
-	ObjectSPTR objectInstance;
-	PipelinePTR pipelineInstance;
 	void PerformRender();
+	unsigned int currentRenderingIdx;
+	std::vector<ObjPipePairSPTR> renderList;
+	CameraSPTR cameraInstance;
 };
-
 typedef shared_ptr<Renderer> RendererSPTR;

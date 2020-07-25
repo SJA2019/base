@@ -16,6 +16,9 @@ using namespace glm;
 
 
 Object::Object(){
+
+    glGenVertexArrays(1, &VertexArrayID);
+    glBindVertexArray(VertexArrayID);
     // Model matrix : an identity matrix (model will be at the origin)
     Model = glm::mat4(1.0f);
 
@@ -34,6 +37,8 @@ glm::mat4 Object::getModelMatrix() {
 }
 
 void Object::Draw() {
+    
+    glBindVertexArray(VertexArrayID);
         // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);

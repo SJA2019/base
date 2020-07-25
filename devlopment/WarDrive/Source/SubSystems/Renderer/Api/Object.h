@@ -125,6 +125,7 @@ class Object {
     GLuint vertexbuffer;
     GLuint colorbuffer;
     glm::mat4 Model;
+    GLuint VertexArrayID;
 
     public:
     Object();

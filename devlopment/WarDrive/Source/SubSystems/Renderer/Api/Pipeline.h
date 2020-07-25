@@ -23,7 +23,7 @@ class Pipeline {
     Pipeline();
     
     private:
-	GLuint programID;
+	GLuint m_programID;
     char shaderInfoLog[256];
     //Pipeline.
     GLuint MatrixID;
@@ -34,4 +34,4 @@ class Pipeline {
 
 };
 
-typedef std::shared_ptr<class Pipeline> PipelinePTR;
+typedef std::shared_ptr<class Pipeline> PipelineSPTR;
