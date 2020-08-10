@@ -11,6 +11,8 @@ include_directories(../InputManager/Api)
 include_directories(../Renderer/Api)
 include_directories(../../Thirdparty/SDL/include)
 include_directories(../../Thirdparty/GLM)
+include_directories(../../Testapp/Build/assimp/include)
+include_directories(../../Thirdparty/assimp/include)
 
 #create a SOURCES parameter, the file(GLOB...) allows for wildcard additions:
 file(GLOB SOURCES "Src/*.cpp")

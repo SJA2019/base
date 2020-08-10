@@ -56,7 +56,7 @@ Renderer::Renderer()
     currentRenderingIdx = 0;
     
     //1
-    auto object = make_shared<Object>();
+    IObjectSPTR object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(-5,5,0));
     auto pipeline = make_shared<Pipeline>();
     auto pair = make_shared<ObjPipePair>();
@@ -65,7 +65,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
     //2
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(0,5,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -74,7 +74,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
     //3
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(5,5,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -84,7 +84,7 @@ Renderer::Renderer()
 
 
     //4
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(-5,0,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -93,7 +93,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
     //5
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<SimpleModelObject>() );
     object->translate(glm::vec3(0,0,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -102,7 +102,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
     //6
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(5,0,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -112,7 +112,7 @@ Renderer::Renderer()
 
 
     //7
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(-5,-5,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -121,7 +121,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
     //8
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(0,-5,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();
@@ -130,7 +130,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
     //9
-    object = make_shared<Object>();
+    object = dynamic_pointer_cast<IObject> ( make_shared<CubeObject>() );
     object->translate(glm::vec3(5,-5,0));
     pipeline = make_shared<Pipeline>();
     pair = make_shared<ObjPipePair>();

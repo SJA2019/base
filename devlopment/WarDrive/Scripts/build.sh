@@ -40,7 +40,7 @@ then
   mkdir ../Source/TestApp/Build
   echo "running-cmake.."
   cd ../Source/TestApp/Build
-  cmake -DCMAKE_BUILD_TYPE=$build_mode ..
+  cmake -DCMAKE_BUILD_TYPE=$build_mode -DBUILD_SHARED_LIBS=false ..
   cd -
 fi 
 

@@ -10,7 +10,8 @@
 #endif
 #include <OpenGL/glu.h>
 
-#include "Object.h"
+#include "CubeObject.h"
+#include "SimpleModelObject.h"
 #include "Camera.h"
 #include "Pipeline.h"
 
@@ -19,7 +20,7 @@ using namespace std;
 
 
 typedef struct OBJPIPPAIR {
-	ObjectSPTR objectInstance = nullptr;
+	IObjectSPTR objectInstance = nullptr;
 	PipelineSPTR pipelineInstance = nullptr;
 } ObjPipePair;
 typedef shared_ptr<ObjPipePair> ObjPipePairSPTR;
