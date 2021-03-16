@@ -16,6 +16,8 @@
 #include <assimp/scene.h>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
+#include <map>
+#include <tuple>
 
 #include "IObject.h"
 #include "Pipeline.h"
@@ -23,20 +25,21 @@
 using namespace std;
 
 
-static  GLfloat g_smo_vertex_buffer_data[1000000] = {0.0f};
+#define BYTE_SIZE_VERTEX_BUFFER 1000000
+#define BYTE_SIZE_COLOR_BUFFER 1000000
 
+//TBD: understand this better - how to manage the vertex buffer in efficient manner.
+static  GLfloat g_smo_vertex_buffer_data[BYTE_SIZE_VERTEX_BUFFER] = {0.0f};
 // One color for each vertex. They were generated randomly.
-static  GLfloat g_smo_color_buffer_data[1000000] = {0.0f};
+static  GLfloat g_smo_color_buffer_data[BYTE_SIZE_COLOR_BUFFER] = {0.0f};
 
 class SimpleModelObject : public IObject {
     private:
     
     GLuint vertexbuffer;
-    //GLfloat* vertex_buffer_data;
     GLuint vertex_buffer_data_count;
 
     GLuint colorbuffer;
-    //GLfloat* color_buffer_data;
     GLuint color_buffer_data_count;
 
 

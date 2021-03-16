@@ -48,3 +48,6 @@ add_custom_command(
                 ${CMAKE_CURRENT_BINARY_DIR}/TransformVertexShader.vertexshader)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets/SR71 DESTINATION ${CMAKE_BINARY_DIR}/Assets)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets/low-poly-vietnam-era-jeep DESTINATION ${CMAKE_BINARY_DIR}/Assets)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets/metal-slug-rebel-tank-comic-style DESTINATION ${CMAKE_BINARY_DIR}/Assets)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets/merkava-tank DESTINATION ${CMAKE_BINARY_DIR}/Assets)
