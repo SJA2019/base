@@ -33,6 +33,15 @@ static  GLfloat g_smo_vertex_buffer_data[BYTE_SIZE_VERTEX_BUFFER] = {0.0f};
 // One color for each vertex. They were generated randomly.
 static  GLfloat g_smo_color_buffer_data[BYTE_SIZE_COLOR_BUFFER] = {0.0f};
 
+struct BufferKey {
+    unsigned int vertex_buffer_idx;
+    unsigned int vertex_buffer_length;
+    unsigned int color_buffer_idx;
+    unsigned int color_buffer_length;
+    GLuint vb_ref;
+    GLuint cb_ref;
+};
+
 class SimpleModelObject : public IObject {
     private:
     
@@ -49,6 +58,8 @@ class SimpleModelObject : public IObject {
     Assimp::Importer *importer = nullptr;
     aiScene *scene = nullptr;
 
+    std::vector<BufferKey> buffer_keys;
+
     public:
     SimpleModelObject();
     virtual glm::mat4 getModelMatrix();
@@ -58,6 +69,7 @@ class SimpleModelObject : public IObject {
 
     private:
     void initAssimp();
+    void drawMeshes(BufferKey& bufferKey);
 
 };
 

@@ -26,12 +26,13 @@ using namespace glm;
 SimpleModelObject::SimpleModelObject(){
 
     initAssimp();
+    glEnable(GL_CULL_FACE);
     glGenVertexArrays(1, &VertexArrayID);
     // Model matrix : an identity matrix (model will be at the origin)
     Model = glm::mat4(1.0f);
 #if 1
     glBindVertexArray(VertexArrayID);
-
+/*
     glGenBuffers(1, &vertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_smo_vertex_buffer_data), g_smo_vertex_buffer_data, GL_STATIC_DRAW);
@@ -39,6 +40,7 @@ SimpleModelObject::SimpleModelObject(){
     glGenBuffers(1, &colorbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_smo_color_buffer_data), g_smo_color_buffer_data, GL_STATIC_DRAW);
+*/
 #endif
 
 }
@@ -49,44 +51,74 @@ void SimpleModelObject::initAssimp() {
     //auto scene = importer->ReadFile("Assets/low-poly-jeep/source/Jeep_1/Jeep_1.fbx", aiProcess_OptimizeMeshes);
     //auto scene = importer->ReadFile("Assets/low-poly-car/source/car/car.FBX", aiProcess_OptimizeMeshes);
     //auto scene = importer->ReadFile("Assets/mecha-low-poly-pbr-reupload/source/robo.fbx", aiProcess_OptimizeMeshes);
-    auto scene = importer->ReadFile("Assets/jeep_collada/model.dae", aiProcess_Triangulate|aiProcess_SortByPType);
+    auto scene = importer->ReadFile("Assets/jeep_collada/model.dae", 0 /*aiProcess_OptimizeMeshes*/ /*aiProcess_OptimizeMeshesaiProcess_Triangulate|aiProcess_SortByPType*/);
 #if 1
     //Load vertices.
     auto nMeshes = scene->mNumMeshes;
     auto vertBuffIdx = 0;
     vertex_buffer_data_count = 0;
     color_buffer_data_count = 0;
+    //auto vertex_buffer_data = g_smo_vertex_buffer_data;//new GLfloat[scene->mMeshes[0]->mNumVertices * 3];
+    //auto color_buffer_data = g_smo_color_buffer_data;//new GLfloat[scene->mMeshes[0]->mNumVertices * 3];
+    glBindVertexArray(VertexArrayID);
     if (nullptr != scene) {
         cout<<"texdbg: nMeshes-count="<<nMeshes<<std::endl;
         for(auto meshIdx = 0; meshIdx < nMeshes; meshIdx++) {
-            auto vertex_buffer_data = g_smo_vertex_buffer_data;//new GLfloat[scene->mMeshes[0]->mNumVertices * 3];
+            /*if(meshIdx != 10) {
+                continue;
+            }*/
             vertex_buffer_data_count+= scene->mMeshes[meshIdx]->mNumVertices;
-            auto color_buffer_data = g_smo_color_buffer_data;//new GLfloat[scene->mMeshes[0]->mNumVertices * 3];
             color_buffer_data_count+= scene->mMeshes[meshIdx]->mNumVertices;
             auto vertexCount = scene->mMeshes[meshIdx]->mNumVertices;
+            cout<<"mesh name:"<<scene->mMeshes[meshIdx]->mName.C_Str()<<std::endl;
             aiColor4D diffuse;
             aiGetMaterialColor(scene->mMaterials[scene->mMeshes[meshIdx]->mMaterialIndex], AI_MATKEY_COLOR_DIFFUSE, &diffuse);
+            BufferKey buffKey = {0};
+            buffKey.color_buffer_idx = vertBuffIdx*3;
+            buffKey.vertex_buffer_idx = vertBuffIdx*3;
             for (auto vertIdx = 0; vertIdx<vertexCount; vertIdx++) {
-                vertex_buffer_data[(vertBuffIdx*3)+0] = scene->mMeshes[meshIdx]->mVertices[vertIdx].x/10;
-                vertex_buffer_data[(vertBuffIdx*3)+1] = scene->mMeshes[meshIdx]->mVertices[vertIdx].y/10;
-                vertex_buffer_data[(vertBuffIdx*3)+2] = scene->mMeshes[meshIdx]->mVertices[vertIdx].z/10;
+                g_smo_vertex_buffer_data[(vertBuffIdx*3)+0] = scene->mMeshes[meshIdx]->mVertices[vertIdx].x/10;
+                g_smo_vertex_buffer_data[(vertBuffIdx*3)+1] = scene->mMeshes[meshIdx]->mVertices[vertIdx].y/10;
+                g_smo_vertex_buffer_data[(vertBuffIdx*3)+2] = scene->mMeshes[meshIdx]->mVertices[vertIdx].z/10;
                 /*color_buffer_data[(vertBuffIdx*3)+0] = ((meshIdx % 2) == 0) ? 0.2f : 0.5f; 
                 color_buffer_data[(vertBuffIdx*3)+1] = ((meshIdx % 2) == 0) ? 0.2f : 0.5f; 
                 color_buffer_data[(vertBuffIdx*3)+2] = ((meshIdx % 2) == 0) ? 0.2f : 0.5f; */
                 /*color_buffer_data[(vertBuffIdx*3)+0] = (scene->mMeshes[meshIdx]->mVertices[vertIdx].x + 1)/2; 
                 color_buffer_data[(vertBuffIdx*3)+1] = (scene->mMeshes[meshIdx]->mVertices[vertIdx].y + 1)/2; 
                 color_buffer_data[(vertBuffIdx*3)+2] = (scene->mMeshes[meshIdx]->mVertices[vertIdx].z + 1)/2;*/
-                color_buffer_data[(vertBuffIdx*3)+0] = diffuse.r; 
-                color_buffer_data[(vertBuffIdx*3)+1] = diffuse.g; 
-                color_buffer_data[(vertBuffIdx*3)+2] = diffuse.b;
+                g_smo_color_buffer_data[(vertBuffIdx*3)+0] = diffuse.r; 
+                g_smo_color_buffer_data[(vertBuffIdx*3)+1] = diffuse.g; 
+                g_smo_color_buffer_data[(vertBuffIdx*3)+2] = diffuse.b;
 
-                
                 vertBuffIdx++;
-                std::cout<<"v="<<scene->mMeshes[0]->mVertices[vertIdx].x/100<<","<<scene->mMeshes[0]->mVertices[vertIdx].y/100<<","<<scene->mMeshes[0]->mVertices[vertIdx].z/100<<std::endl;
-                std::cout<<"r="<<diffuse.r<<",g="<<diffuse.g<<",b="<<diffuse.b<<",a="<<diffuse.a<<std::endl;
+                buffKey.color_buffer_length+=3;
+                buffKey.vertex_buffer_length+=3;
+                //std::cout<<"v="<<scene->mMeshes[0]->mVertices[vertIdx].x/100<<","<<scene->mMeshes[0]->mVertices[vertIdx].y/100<<","<<scene->mMeshes[0]->mVertices[vertIdx].z/100<<std::endl;
+                //std::cout<<"r="<<diffuse.r<<",g="<<diffuse.g<<",b="<<diffuse.b<<",a="<<diffuse.a<<std::endl;
+                if(10==meshIdx){
+                    std::cout<<meshIdx<<"th meshdbg: vertex, vCount="<<vertexCount<<"vertices=:"<<scene->mMeshes[meshIdx]->mVertices[vertIdx].x/10<<","<< scene->mMeshes[meshIdx]->mVertices[vertIdx].y/10<<","<< scene->mMeshes[meshIdx]->mVertices[vertIdx].z/10<<std::endl;
+                }
             }
+            //buffKey.color_buffer_length+=3;
+            //buffKey.vertex_buffer_length+=3;
+
+            glGenBuffers(1, &buffKey.vb_ref);
+            glBindBuffer(GL_ARRAY_BUFFER, buffKey.vb_ref);
+            glBufferData(GL_ARRAY_BUFFER, buffKey.vertex_buffer_length * sizeof(GLuint), g_smo_vertex_buffer_data + buffKey.vertex_buffer_idx, GL_STATIC_DRAW);
+
+            if(10==meshIdx){
+                std::cout<<meshIdx<<"th meshdbg: vertices count="<<buffKey.vertex_buffer_length<<std::endl;
+            }
+
+
+            glGenBuffers(1, &buffKey.cb_ref);
+            glBindBuffer(GL_ARRAY_BUFFER, buffKey.cb_ref);
+            glBufferData(GL_ARRAY_BUFFER, buffKey.color_buffer_length * sizeof(GLuint), g_smo_color_buffer_data + buffKey.color_buffer_idx, GL_STATIC_DRAW);
+
+            buffer_keys.push_back(buffKey);
         }
     }
+#else
     //Load texture.
     if (scene->HasMaterials())
     {
@@ -107,7 +139,7 @@ void SimpleModelObject::initAssimp() {
     } else {
         cout<<"texdbg: has materials=false"<<std::endl;
     }
-#else
+    ///other
     vertex_buffer_data_count=3;
     color_buffer_data_count=3;
     vertex_buffer_data = new GLfloat[vertex_buffer_data_count * 3];
@@ -137,10 +169,6 @@ void SimpleModelObject::initAssimp() {
     }
 #endif
 
-    
-    
-
-
 }
 
 glm::mat4 SimpleModelObject::getModelMatrix() {
@@ -148,11 +176,46 @@ glm::mat4 SimpleModelObject::getModelMatrix() {
 }
 
 void SimpleModelObject::Draw() {
+
+#define MESH_DEBUG false
+#define SINGLE_MESH_DBG false
+#if MESH_DEBUG
+    static unsigned int draw_idx = 0;
+    static unsigned int draw_idx_counter = 0;
+
+    draw_idx_counter++;
+    draw_idx_counter = (draw_idx_counter > 2) ? 0 : draw_idx_counter;
+
+    draw_idx = (draw_idx_counter == 2) ? (draw_idx+1) : draw_idx;
     
+    if(draw_idx>=buffer_keys.size()) {
+        draw_idx = 0;
+    }
+    cout<<"drawing meshidx ="<<draw_idx;
+    drawMeshes(buffer_keys[draw_idx]);
+#elif SINGLE_MESH_DBG
+    unsigned int singleMeshIdx=10;
+    drawMeshes(buffer_keys[singleMeshIdx]);
+#else
+    for(int idx = 0; idx<buffer_keys.size(); idx++) {
+        drawMeshes(buffer_keys[idx]);
+    }
+#endif
+}
+
+void SimpleModelObject::rotate(float angle, glm::vec3 axis) {
+    Model = glm::rotate(Model, angle, axis );
+}
+void SimpleModelObject::translate(glm::vec3 offset) {
+    Model = glm::translate(Model, offset);
+}
+
+void SimpleModelObject::drawMeshes(BufferKey &bufferKey) {
+
     glBindVertexArray(VertexArrayID);
         // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferKey.vb_ref);
     glVertexAttribPointer(
         0,        // attribute. No particular reason for 0, but must match the layout in the shader.
         3,        // size
@@ -164,7 +227,7 @@ void SimpleModelObject::Draw() {
 
     // 2nd attribute buffer : colors
     glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferKey.cb_ref);
     glVertexAttribPointer(
         1,        // attribute. No particular reason for 1, but must match the layout in the shader.
         3,        // size
@@ -178,16 +241,8 @@ void SimpleModelObject::Draw() {
     //glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_data_count * 3 ); // 12*3 indices starting at 0 -> 12 triangles
     //glDrawArrays(GL_TRIANGLE_STRIP, 0, vertex_buffer_data_count * 3 );
     //glDrawArrays(GL_LINE_LOOP, 0, vertex_buffer_data_count * 3 );
-    glDrawArrays(GL_LINE_LOOP, 0, vertex_buffer_data_count * 3 );
+    glDrawArrays(GL_TRIANGLES, 0, bufferKey.vertex_buffer_length/3 /*570*/);
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
 }
-
-void SimpleModelObject::rotate(float angle, glm::vec3 axis) {
-    Model = glm::rotate(Model, angle, axis );
-}
-void SimpleModelObject::translate(glm::vec3 offset) {
-    Model = glm::translate(Model, offset);
-}
-
