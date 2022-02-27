@@ -139,7 +139,7 @@ Renderer::Renderer()
     renderList.push_back(pair);
 
 
-    
+    std::cout << "Renderer() : in progress." << std::endl;
     // Our ModelViewProjection : multiplication of our 3 matrices
     auto View = cameraInstance->getViewMatrix();
     auto Projection = cameraInstance->getProjectionMatrix();

@@ -28,10 +28,15 @@ using namespace std;
 #define BYTE_SIZE_VERTEX_BUFFER 1000000
 #define BYTE_SIZE_COLOR_BUFFER 1000000
 
+#if 0
 //TBD: understand this better - how to manage the vertex buffer in efficient manner.
 static  GLfloat g_smo_vertex_buffer_data[BYTE_SIZE_VERTEX_BUFFER] = {0.0f};
 // One color for each vertex. They were generated randomly.
 static  GLfloat g_smo_color_buffer_data[BYTE_SIZE_COLOR_BUFFER] = {0.0f};
+#endif
+static  GLfloat* g_smo_vertex_buffer_data = NULL;
+// One color for each vertex. They were generated randomly.
+static  GLfloat* g_smo_color_buffer_data = NULL;
 
 struct BufferKey {
     unsigned int vertex_buffer_idx;

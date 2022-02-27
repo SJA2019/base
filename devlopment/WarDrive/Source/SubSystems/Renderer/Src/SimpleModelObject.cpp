@@ -25,6 +25,11 @@ using namespace glm;
 
 SimpleModelObject::SimpleModelObject(){
 
+    std::cout << "SimpleModelObject() ++" << std::endl;
+    //g_smo_vertex_buffer_data = (GLfloat*) malloc(BYTE_SIZE_VERTEX_BUFFER * sizeof(GLfloat));
+//g_smo_color_buffer_data = (GLfloat*)malloc(BYTE_SIZE_COLOR_BUFFER * sizeof(GLfloat));
+g_smo_vertex_buffer_data = new GLfloat[BYTE_SIZE_VERTEX_BUFFER];
+g_smo_color_buffer_data = new GLfloat[BYTE_SIZE_COLOR_BUFFER];
     initAssimp();
     glEnable(GL_CULL_FACE);
     glGenVertexArrays(1, &VertexArrayID);
@@ -42,6 +47,7 @@ SimpleModelObject::SimpleModelObject(){
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_smo_color_buffer_data), g_smo_color_buffer_data, GL_STATIC_DRAW);
 */
 #endif
+std::cout << "SimpleModelObject() --" << std::endl;
 
 }
 
@@ -77,6 +83,7 @@ void SimpleModelObject::initAssimp() {
             buffKey.color_buffer_idx = vertBuffIdx*3;
             buffKey.vertex_buffer_idx = vertBuffIdx*3;
             for (auto vertIdx = 0; vertIdx<vertexCount; vertIdx++) {
+                cout<<"for:vertIdx="<<vertIdx;
                 g_smo_vertex_buffer_data[(vertBuffIdx*3)+0] = scene->mMeshes[meshIdx]->mVertices[vertIdx].x/10;
                 g_smo_vertex_buffer_data[(vertBuffIdx*3)+1] = scene->mMeshes[meshIdx]->mVertices[vertIdx].y/10;
                 g_smo_vertex_buffer_data[(vertBuffIdx*3)+2] = scene->mMeshes[meshIdx]->mVertices[vertIdx].z/10;

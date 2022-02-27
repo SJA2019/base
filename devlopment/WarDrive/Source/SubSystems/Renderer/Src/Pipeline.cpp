@@ -132,11 +132,12 @@ GLuint Pipeline::LoadShaders(const char * vertex_file_path,const char * fragment
 	}
 
 	// Link the program
-	printf("Linking program\n");
+	printf("Linking program..\n");
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
 	glLinkProgram(ProgramID);
+	printf("Linking program - done\n");
 
 	// Check the program
 	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
@@ -157,7 +158,7 @@ GLuint Pipeline::LoadShaders(const char * vertex_file_path,const char * fragment
 }
 
 Pipeline::Pipeline(){
-	
+	printf("Pipeline()");
 	m_programID = 0;
 	MVP = glm::mat4();
 

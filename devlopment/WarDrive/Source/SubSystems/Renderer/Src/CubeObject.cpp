@@ -17,6 +17,8 @@ using namespace glm;
 
 CubeObject::CubeObject(){
 
+
+    std::cout << "CubeObject() ++" << std::endl;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
     // Model matrix : an identity matrix (model will be at the origin)
@@ -29,6 +31,7 @@ CubeObject::CubeObject(){
     glGenBuffers(1, &colorbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+     std::cout << "CubeObject() --" << std::endl;
 }
 
 
