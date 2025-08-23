@@ -27,6 +27,11 @@
             "label": "wdRun",
             "type": "shell",
             "command": "cd ${workspaceFolder}/Source/TestApp/Build/;./TestAppExec;cd -"
+        },
+        {
+            "label": "wdBuildRun",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/Scripts/; sh build.sh -skip-cmake -skip-clean; cd ${workspaceFolder}/Source/TestApp/Build/; ./TestAppExec; cd -"
         }
     ]
 }

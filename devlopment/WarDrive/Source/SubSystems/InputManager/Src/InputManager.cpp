@@ -9,15 +9,15 @@ InputManager::InputManager(InputDeviceSelection::DeviceSet inputDeviceSet) {
     if(inputDeviceSet[InputDeviceSelection::joyInputDevice])
     {
         inputSelection |= SDL_INIT_JOYSTICK;
-        SDL_JoystickEventState(SDL_ENABLE);
+        SDL_SetJoystickEventsEnabled(true);
         
         SDL_Joystick *joystick = nullptr;
-        joystick = SDL_JoystickOpen(0);
+        joystick = SDL_OpenJoystick(0);
     }
     if(inputDeviceSet[InputDeviceSelection::mouseInputDevice] || inputDeviceSet[InputDeviceSelection::keyboardDevice])
     {
         inputSelection |= SDL_INIT_EVENTS | SDL_INIT_VIDEO;
-        SDL_EventState( SDL_MOUSEMOTION | SDL_MOUSEBUTTONDOWN | SDL_MOUSEBUTTONUP | SDL_MOUSEWHEEL | SDL_KEYDOWN | SDL_KEYUP, SDL_ENABLE );
+        SDL_SetEventEnabled( SDL_EVENT_MOUSE_MOTION | SDL_EVENT_MOUSE_BUTTON_DOWN | SDL_EVENT_MOUSE_BUTTON_UP | SDL_EVENT_MOUSE_WHEEL | SDL_EVENT_KEY_DOWN | SDL_EVENT_KEY_UP, true );
     
     }
 
@@ -25,8 +25,9 @@ InputManager::InputManager(InputDeviceSelection::DeviceSet inputDeviceSet) {
 	{
 		std::cout<<"InputManager(): SDL_Init failed with:"<<inputSelection<<std::endl;	
 	}
-    
-	std::cout<<"InputManager(): Number of joysticks found: "<<SDL_NumJoysticks()<<std::endl;
+    int count = 0;
+    SDL_GetJoysticks(&count);
+	std::cout<<"InputManager(): Number of joysticks found: "<<count<<std::endl;
 	std::cout<<"InputManager() ++"<<std::endl;
 }
 
@@ -50,17 +51,17 @@ IMEvent InputManager::PollJoyEvents() {
     /* Start main game loop here */
     hasEvent=SDL_PollEvent(&sdlEvent);
     if(hasEvent==true) {
-        if (sdlEvent.type == SDL_QUIT) {
+        if (sdlEvent.type == SDL_EVENT_QUIT) {
             std::cout<<"InputManager:QUIT."<<std::endl;
             eventOut.eventType = EIMJoyEventType::eIMEventBailOut;
-        } else if( sdlEvent.type == SDL_MOUSEMOTION || sdlEvent.type == SDL_MOUSEBUTTONDOWN ) {
+        } else if( sdlEvent.type == SDL_EVENT_MOUSE_MOTION || sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN ) {
             std::cout<<"InputManager:MouseEvent: event.type="<<sdlEvent.type<<",move="<<sdlEvent.motion.xrel<<","<<sdlEvent.motion.yrel<<",btn="<<sdlEvent.button.button<<std::endl;
             eventOut.eventType = EIMJoyEventType::eIMEventAvailable;
-        } else if(sdlEvent.type == SDL_MOUSEBUTTONUP || sdlEvent.type == SDL_MOUSEWHEEL) {
+        } else if(sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_UP || sdlEvent.type == SDL_EVENT_MOUSE_WHEEL) {
             std::cout<<"InputManager:MouseEvent: event.type="<<std::endl;
             eventOut.eventType = EIMJoyEventType::eIMEventAvailable;
-        } else if(sdlEvent.type == SDL_KEYDOWN || sdlEvent.type == SDL_KEYUP) {
-            std::cout<<"InputManager:KeyboardEvent: event.type="<<sdlEvent.type<<"key="<<sdlEvent.key.keysym.scancode<<","<<sdlEvent.key.keysym.sym<<std::endl;
+        } else if(sdlEvent.type == SDL_EVENT_KEY_DOWN || sdlEvent.type == SDL_EVENT_KEY_UP) {
+            std::cout<<"InputManager:KeyboardEvent: event.type="<<sdlEvent.type<<"key="<<sdlEvent.key.scancode<<","<<sdlEvent.key.key<<std::endl;
             eventOut.eventType = EIMJoyEventType::eIMEventAvailable;
         } else {
             std::cout<<"InputManager:PollJoyEvents: event.type="<<sdlEvent.type<<"|event.jbutton.button="<<(Uint32)sdlEvent.jbutton.button<<"|event.jaxis.value="<<sdlEvent.jaxis.value<<"|event.jaxis.axis="<<(Uint32)sdlEvent.jaxis.axis<<std::endl;

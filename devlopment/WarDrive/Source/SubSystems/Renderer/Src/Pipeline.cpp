@@ -157,7 +157,7 @@ GLuint Pipeline::LoadShaders(const char * vertex_file_path,const char * fragment
 	return ProgramID;
 }
 
-Pipeline::Pipeline(){
+Pipeline::Pipeline(char* vertexShaderFileName, char* fragmentShaderFileName){
 	printf("Pipeline()");
 	m_programID = 0;
 	MVP = glm::mat4();
@@ -166,7 +166,13 @@ Pipeline::Pipeline(){
 #if PROGRAM_FROM_STRING
     m_programID = CreateProgramFromShaderText(vertexSource, fragmentSource);
 #else
-    m_programID = CreateProgramFromShaderFiles("TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader");
+	if(vertexShaderFileName == nullptr) {
+		vertexShaderFileName = "TransformVertexShader.vertexshader";
+	}
+	if(fragmentShaderFileName == nullptr) {
+		fragmentShaderFileName = "ColorFragmentShader.fragmentshader";
+	}
+    m_programID = CreateProgramFromShaderFiles(vertexShaderFileName, fragmentShaderFileName);
 #endif
 
 	// Get a handle for our "MVP" uniform

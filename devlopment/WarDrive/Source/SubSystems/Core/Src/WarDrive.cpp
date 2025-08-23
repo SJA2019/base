@@ -34,10 +34,14 @@ void WarDrive::Run()
         }
         else if (EIMJoyEventType::eIMEventAvailable == inputEvent.eventType)
         {
-            if(nullptr != rendererInstance && inputEvent.sdlEvent.key.state != SDL_RELEASED) {
-                rendererInstance->HandleInput(inputEvent.sdlEvent.key.keysym.sym);
+            if(nullptr != rendererInstance && inputEvent.sdlEvent.key.type != SDL_EVENT_KEY_UP) {
+                rendererInstance->HandleInput(inputEvent.sdlEvent.key.key);
                 rendererInstance->Render();
             }
-        }
+            
+        }  /*else {
+            rendererInstance->HandleInput(SDLK_1);
+            rendererInstance->Render();
+        }*/
     }
 }

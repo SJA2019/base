@@ -62,6 +62,21 @@
         "vector": "cpp",
         "*.tcc": "cpp",
         "cinttypes": "cpp",
-        "hashtable": "cpp"
+        "hashtable": "cpp",
+        "__errc": "cpp",
+        "__node_handle": "cpp",
+        "__tree": "cpp",
+        "bit": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "fstream": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "numeric": "cpp",
+        "optional": "cpp",
+        "regex": "cpp",
+        "set": "cpp",
+        "stack": "cpp",
+        "unordered_set": "cpp"
     }
 }

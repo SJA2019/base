@@ -31,7 +31,7 @@ SimpleModelObject::SimpleModelObject(){
 g_smo_vertex_buffer_data = new GLfloat[BYTE_SIZE_VERTEX_BUFFER];
 g_smo_color_buffer_data = new GLfloat[BYTE_SIZE_COLOR_BUFFER];
     initAssimp();
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
     glGenVertexArrays(1, &VertexArrayID);
     // Model matrix : an identity matrix (model will be at the origin)
     Model = glm::mat4(1.0f);

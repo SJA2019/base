@@ -11,6 +11,7 @@
 #include <OpenGL/glu.h>
 
 #include "CubeObject.h"
+#include "GridPlane.h"
 #include "SimpleModelObject.h"
 #include "Camera.h"
 #include "Pipeline.h"

@@ -9,6 +9,7 @@ include_directories(
 Src
 Api
 ../../Thirdparty/SDL/include
+../../Thirdparty/SDL/include/SDL3
 )
 
 #create a SOURCES parameter, the file(GLOB...) allows for wildcard additions:

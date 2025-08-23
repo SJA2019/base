@@ -1,3 +1,4 @@
+
 #! /bin/sh
 
 usage="usage: ./build.sh [-h][-skip-cmake][-skip-clean][-debug]"
@@ -40,7 +41,7 @@ then
   mkdir ../Source/TestApp/Build
   echo "running-cmake.."
   cd ../Source/TestApp/Build
-  cmake -DCMAKE_BUILD_TYPE=$build_mode -DBUILD_SHARED_LIBS=false ..
+  /usr/local/Cellar/cmake/3.31.5/bin/cmake -DCMAKE_BUILD_TYPE=$build_mode -DBUILD_SHARED_LIBS=false ..
   cd -
 fi 
 

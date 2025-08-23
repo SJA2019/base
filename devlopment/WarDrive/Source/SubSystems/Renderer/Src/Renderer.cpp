@@ -26,9 +26,7 @@ Renderer::Renderer()
     std::cout << "Renderer() ++" << std::endl;
 
     //SDL_Surface* screenSurface = NULL;
-    window = SDL_CreateWindow("SampleRendering..",
-                              SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                              640, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    window = SDL_CreateWindow("SampleRendering..",1280, 960, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
     if (window == NULL)
     {
@@ -138,6 +136,19 @@ Renderer::Renderer()
     pair->pipelineInstance = pipeline;
     renderList.push_back(pair);
 
+    //10
+    object = dynamic_pointer_cast<IObject> ( make_shared<GridPlane>() );
+    //char *a = "GridVertexShader.vertexshader";
+    //char *b = "GridFragmentShader.fragmentshader";
+    //pipeline = make_shared<Pipeline>(a,b);
+    object->translate(glm::vec3(0,0,0));
+    pipeline = make_shared<Pipeline>();
+
+    pair = make_shared<ObjPipePair>();
+    pair->objectInstance = object;
+    pair->pipelineInstance = pipeline;
+    renderList.push_back(pair);
+
 
     std::cout << "Renderer() : in progress." << std::endl;
     // Our ModelViewProjection : multiplication of our 3 matrices
@@ -175,6 +186,8 @@ void Renderer::HandleInput(SDL_Keycode input) {
             float camXOffset = 0.0f;
             float camYOffset = 0.0f;
             float camZOffset = 0.0f;
+
+            const float transDelta = 0.01f;
             
             switch(input) {
                 //Rotate object 'x','y','z'
@@ -196,45 +209,45 @@ void Renderer::HandleInput(SDL_Keycode input) {
                 //Move Object up/down/left/right
                 //
                 case SDLK_1:
-                    objXOffset++;
+                    objXOffset += transDelta;
                 break;
                 case SDLK_2:
-                    objXOffset--;
+                    objXOffset -= transDelta;
                 break;
                 case SDLK_3:
-                    objYOffset++;
+                    objYOffset += transDelta;
                 break;
                 case SDLK_4:
-                    objYOffset--;
+                    objYOffset -= transDelta;
                 break;
                 case SDLK_5:
-                    objZOffset++;
+                    objZOffset += transDelta;
                 break;
                 case SDLK_6:
-                    objZOffset--;
+                    objZOffset -= transDelta;
                 break;
                 
                 //Move Camera up/down/left/right
                 //
                 case SDLK_UP:
-                    camYOffset++;
+                    camYOffset += transDelta;
                 break;
                 case SDLK_DOWN:
-                    camYOffset--;
+                    camYOffset -= transDelta;
                 break;
                 case SDLK_RIGHT:
-                    camXOffset++;
+                    camXOffset += transDelta;
                 break;
                 case SDLK_LEFT:
-                    camXOffset--;
+                    camXOffset -= transDelta;
                 break;
                 //Move Camera forward/back
                 //
                 case '.':
-                    camZOffset++;
+                    camZOffset += transDelta;
                 break;
                 case ',':
-                    camZOffset--;
+                    camZOffset -= transDelta;
                 break;
                 //Focus Camera on object
                 case '/':
@@ -316,6 +329,7 @@ void Renderer::PerformRender()
     red = (red > 1) ? 0.1 : red;
     green = (green > 1) ? 0.1 : green;
     blue = (blue > 1) ? 0.1 : blue;
+    red = green = blue = 0.5;
     glClearColor(red, green, blue, 1);
 
     for (ObjPipePairSPTR item : renderList) {

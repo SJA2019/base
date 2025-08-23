@@ -20,7 +20,7 @@ class Pipeline {
     GLuint GetProgramId();
     GLuint updateMVPMatrix(glm::mat4 MVPIn);
     void submitMVPMatrix();
-    Pipeline();
+    Pipeline(char *vertexShaderFileName = nullptr, char *fragmentShaderFileName = nullptr);
     
     private:
 	GLuint m_programID;

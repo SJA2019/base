@@ -9,6 +9,7 @@ include_directories(
 Src
 Api
 ../../Thirdparty/SDL/include
+../../Thirdparty/SDL/include/SDL3
 ../../Testapp/Build/assimp/include
 ../../Thirdparty/assimp/include
 ../../Thirdparty/GLM
