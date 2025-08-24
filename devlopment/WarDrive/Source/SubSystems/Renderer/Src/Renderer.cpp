@@ -1,8 +1,8 @@
 #include "SDL.h"
 
 // Include GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 
 using namespace glm;
 #include <string>
