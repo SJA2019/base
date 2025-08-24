@@ -1,5 +1,5 @@
 #set the cmake version.
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 4.0.3)
 
 #set the project name.
 project(WarDrive)
